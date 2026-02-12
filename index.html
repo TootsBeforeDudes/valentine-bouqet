@@ -5,11 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>For Evan — Roses</title>
 <style>
-  :root{
-    --bg:#fff6f8;
-    --accent:#d63384;
-    --shadow: rgba(10,10,20,0.08);
-  }
+  :root{ --bg:#fff6f8; --accent:#d63384; --shadow: rgba(10,10,20,0.08); }
   html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);display:flex;align-items:center;justify-content:center}
   .card{width:min(920px,94vw);height:min(640px,86vh);border-radius:14px;background:linear-gradient(180deg,#fff,#fff6f8);box-shadow:0 22px 48px var(--shadow);display:flex;gap:24px;padding:28px;align-items:center}
   .left{flex:1;display:flex;align-items:center;justify-content:center}
@@ -18,16 +14,13 @@
   .name{color:var(--accent);font-weight:700;font-size:28px;margin:8px 0}
   .hint{color:#6b6b73;font-size:13px}
   .btn{display:inline-block;padding:8px 12px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:#fff;cursor:pointer;margin-top:12px}
-  /* SVG transform support */
   svg *{ transform-box: fill-box; transform-origin: center; }
-  /* animations */
   .petal{ animation: bloom .9s cubic-bezier(.2,.9,.3,1) both; }
   .stem{ animation: sway 5.5s ease-in-out infinite; transform-origin: bottom center; }
   .roseGroup{ animation: float 6s ease-in-out infinite; }
   @keyframes bloom{0%{transform:scale(.12) translateY(18px);opacity:0}70%{transform:scale(1.06) translateY(-6px);opacity:1}100%{transform:scale(1) translateY(0)}}
   @keyframes sway{0%{transform:rotate(0deg)}25%{transform:rotate(2deg)}50%{transform:rotate(0deg)}75%{transform:rotate(-2deg)}100%{transform:rotate(0deg)}}
   @keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
-  /* overlay */
   .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .2s;background:linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.18));z-index:50}
   .overlay.show{pointer-events:all;opacity:1}
   .popup{background:white;padding:22px;border-radius:12px;box-shadow:0 18px 40px rgba(10,10,20,0.18);max-width:86vw;text-align:center}
@@ -39,41 +32,37 @@
 
 <div class="card">
   <div class="left">
-    <!-- Simple detailed roses in vase (SVG) -->
+    <!-- SVG bouquet: adjusted positions so stems enter vase -->
     <svg id="roses" viewBox="0 0 900 640" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-label="Roses in a vase">
       <defs>
-        <!-- subtle gradients used for petals and vase -->
         <radialGradient id="rg1" cx="30%" cy="30%"><stop offset="0%" stop-color="#ffd6dd"/><stop offset="60%" stop-color="#ff8aa3"/><stop offset="100%" stop-color="#d64b6d"/></radialGradient>
         <radialGradient id="rg2" cx="30%" cy="30%"><stop offset="0%" stop-color="#ffe9d6"/><stop offset="60%" stop-color="#ff8aa3"/><stop offset="100%" stop-color="#e06278"/></radialGradient>
         <radialGradient id="centerG" cx="40%" cy="40%"><stop offset="0%" stop-color="#fff7d9"/><stop offset="100%" stop-color="#ffd166"/></radialGradient>
         <linearGradient id="vaseGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.96"/><stop offset="100%" stop-color="#ffeef6"/></linearGradient>
       </defs>
 
-      <!-- vase -->
+      <!-- vase placed at bottom center -->
       <g transform="translate(450,500)">
         <ellipse cx="0" cy="36" rx="220" ry="34" fill="rgba(0,0,0,0.06)"/>
         <path d="M-160 12 C-120 170 120 170 160 12 L140 260 C70 300 -70 300 -140 260 Z" fill="url(#vaseGrad)"/>
       </g>
 
-      <!-- left rose -->
-      <g class="roseGroup" transform="translate(300,260)" data-name="rose-left" style="cursor:pointer">
-        <!-- stem -->
+      <!-- LEFT ROSE: moved lower (y increased) so stem reaches vase -->
+      <g class="roseGroup" transform="translate(300,320)" data-name="rose-left" style="cursor:pointer">
         <path class="stem" d="M-6 180 C-10 120 -20 80 -12 36" stroke="#2b6b3a" stroke-width="5" fill="none"/>
-        <!-- layered petals (paths for slightly natural shape) -->
         <g id="leftPetals">
           <path class="petal" d="M0 -30 C40 -68 72 -32 54 -4 C36 24 -6 34 -26 18 C-46 2 -12 -12 0 -30 Z" fill="url(#rg1)"/>
           <path class="petal" d="M0 -30 C-28 -58 -68 -36 -56 -6 C-44 22 -8 34 12 22 C32 10 18 -6 0 -30 Z" fill="url(#rg2)" transform="rotate(22)"/>
           <path class="petal" d="M6 -12 C18 -36 42 -30 46 -6 C50 20 18 30 2 22 C-14 14 -2 0 6 -12 Z" fill="rgba(255,140,150,0.12)"/>
         </g>
-        <!-- inner spirals / center -->
         <g transform="translate(6,-6)">
           <ellipse class="center" rx="12" ry="10" fill="url(#centerG)"/>
           <path d="M-4 -2 C2 -12 12 -8 8 4 C4 16 -6 12 -8 2" fill="rgba(255,200,120,0.06)"/>
         </g>
       </g>
 
-      <!-- center rose -->
-      <g class="roseGroup" transform="translate(460,200)" data-name="rose-center" style="cursor:pointer">
+      <!-- CENTER ROSE: moved lower -->
+      <g class="roseGroup" transform="translate(460,280)" data-name="rose-center" style="cursor:pointer">
         <path class="stem" d="M-2 200 C-8 130 -6 78 6 34" stroke="#2b6b3a" stroke-width="5" fill="none"/>
         <g id="centerPetals">
           <path class="petal" d="M0 -36 C48 -82 96 -44 72 -6 C48 32 6 46 -18 28 C-42 10 -6 -6 0 -36 Z" fill="url(#rg2)"/>
@@ -85,8 +74,8 @@
         </g>
       </g>
 
-      <!-- right rose -->
-      <g class="roseGroup" transform="translate(620,260)" data-name="rose-right" style="cursor:pointer">
+      <!-- RIGHT ROSE: moved lower -->
+      <g class="roseGroup" transform="translate(620,320)" data-name="rose-right" style="cursor:pointer">
         <path class="stem" d="M6 180 C14 120 28 80 14 36" stroke="#2b6b3a" stroke-width="5" fill="none"/>
         <g id="rightPetals">
           <path class="petal" d="M0 -28 C40 -64 76 -36 58 -8 C40 20 4 34 -18 20 C-40 6 -8 -6 0 -28 Z" fill="url(#rg1)"/>
@@ -98,14 +87,13 @@
         </g>
       </g>
 
-      <!-- small accent bloom -->
-      <g class="roseGroup" transform="translate(520,140)">
+      <!-- small accent bloom slightly lower -->
+      <g class="roseGroup" transform="translate(520,220)">
         <path class="stem" d="M0 120 C2 82 -6 60 2 32" stroke="#2b6b3a" stroke-width="4" fill="none"/>
         <ellipse class="petal" rx="26" ry="16" cx="0" cy="-22" fill="url(#rg2)"/>
         <ellipse class="center" rx="8" ry="6" cx="0" cy="-6" fill="url(#centerG)"/>
       </g>
 
-      <!-- label -->
       <text x="450" y="600" text-anchor="middle" fill="#6b7280" font-size="18">A small bouquet, just for you</text>
     </svg>
   </div>
@@ -129,7 +117,6 @@
 </div>
 
 <script>
-  // simple interactions: reveal overlay and spawn hearts
   const overlay = document.getElementById('overlay');
   const closeBtn = document.getElementById('close');
   const revealBtn = document.getElementById('reveal');
@@ -137,66 +124,38 @@
   const recipient = "Evan";
   document.getElementById('recipient').textContent = recipient;
 
-  function spawnHearts(x, y, count=10){
+  function spawnHearts(x,y,count=10){
     for(let i=0;i<count;i++){
-      const el = document.createElement('div');
-      el.textContent = ['❤','💗','💕'][Math.floor(Math.random()*3)];
+      const el=document.createElement('div');
+      el.textContent=['❤','💗','💕'][Math.floor(Math.random()*3)];
       el.style.position='fixed';
-      // jitter around target
       el.style.left = (x + (Math.random()*120 - 60)) + 'px';
       el.style.top = (y + (Math.random()*80 - 40)) + 'px';
       el.style.fontSize = (12 + Math.random()*28) + 'px';
       el.style.pointerEvents = 'none';
-      el.style.opacity = '0.95';
+      el.style.opacity='0.95';
       document.body.appendChild(el);
-      // animate up + fade
-      setTimeout(()=> {
-        el.style.transition = 'transform 1.8s ease, opacity 1.8s ease';
-        el.style.transform = 'translateY(-140px) scale(.9)';
-        el.style.opacity = '0';
-      }, 40 + Math.random()*160);
-      setTimeout(()=> el.remove(), 2200 + Math.random()*800);
+      setTimeout(()=>{ el.style.transition='transform 1.8s ease, opacity 1.8s ease'; el.style.transform='translateY(-140px) scale(.9)'; el.style.opacity='0'; }, 40+Math.random()*160);
+      setTimeout(()=> el.remove(), 2200+Math.random()*800);
     }
   }
 
-  // show overlay at center and spawn hearts near clicked rose
-  function showSurpriseAt(clientX, clientY){
+  function showSurpriseAt(cx,cy){
     overlay.classList.add('show');
     overlay.setAttribute('aria-hidden','false');
-    spawnHearts(clientX, clientY, 12);
+    spawnHearts(cx,cy,12);
   }
 
-  // click handlers for each rose group (by data-name)
   const roses = svg.querySelectorAll('.roseGroup');
-  roses.forEach(r => {
-    r.addEventListener('click', (ev) => {
-      ev.stopPropagation();
-      // use the click location for hearts
-      showSurpriseAt(ev.clientX, ev.clientY);
-    });
-  });
+  roses.forEach(r => r.addEventListener('click', (ev)=>{ ev.stopPropagation(); showSurpriseAt(ev.clientX, ev.clientY); }));
 
-  // fallback: clicking Reveal Now uses center of viewport
-  revealBtn.addEventListener('click', (ev)=>{
-    const cx = window.innerWidth/2;
-    const cy = window.innerHeight/2;
-    showSurpriseAt(cx, cy);
-  });
-
-  closeBtn.addEventListener('click', ()=>{
-    overlay.classList.remove('show');
-    overlay.setAttribute('aria-hidden','true');
-  });
-
-  // close on escape
-  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeBtn.click(); });
-
-  // stop event propagation so clicking svg outside flowers doesn't close overlay
-  svg.addEventListener('click', ev => ev.stopPropagation());
-  // clicking page outside overlay closes overlay
+  revealBtn.addEventListener('click', ()=> { showSurpriseAt(window.innerWidth/2, window.innerHeight/2); });
+  closeBtn.addEventListener('click', ()=> { overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeBtn.click(); });
+  svg.addEventListener('click', ev=> ev.stopPropagation());
   document.body.addEventListener('click', ()=> { overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); });
 
-  console.log('Roses loaded for', recipient);
+  console.log('Roses positioned to sit in vase for', recipient);
 </script>
 </body>
 </html>
