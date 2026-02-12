@@ -5,191 +5,51 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>For Evan — Happy Valentine's Day</title>
 <style>
-  :root{
-    --bg1: #fff6f9;
-    --bg2: #fff0f6;
-    --accent: #d63384;
-    --soft: #ffb3c6;
-    --leaf: #3aa28a;
-    --shadow: rgba(10,10,20,0.12);
-    --glass: rgba(255,255,255,0.6);
-  }
+  :root{--accent:#d63384;--shadow:rgba(10,10,20,0.12);}
   html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;color:#2b2730}
-  body{
-    display:flex;align-items:center;justify-content:center;
-    background: radial-gradient(1200px 600px at 10% 10%, #fff7fb 0%, transparent 18%),
-                radial-gradient(900px 500px at 90% 90%, #fff5f8 0%, transparent 20%),
-                linear-gradient(180deg,var(--bg1),var(--bg2));
-    overflow:hidden;
-  }
-
-  .stage{
-    width: min(920px,94vw);
-    height: min(720px,84vh);
-    background: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(255,248,250,0.98));
-    border-radius: 18px;
-    box-shadow: 0 18px 40px var(--shadow);
-    position:relative;
-    padding:28px;
-    display:grid;
-    grid-template-columns: 1fr 360px;
-    gap:18px;
-    align-items:center;
-    overflow:visible;
-  }
-
-  /* left: canvas */
-  .canvas{
-    position:relative;
-    width:100%;
-    height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-  }
-
-  svg.floral {
-    width:100%;
-    height:100%;
-    max-height:640px;
-    overflow:visible;
-  }
-
-  /* right: panel */
-  .panel{
-    position:relative;
-    padding:18px;
-    display:flex;
-    flex-direction:column;
-    gap:12px;
-    align-items:flex-start;
-  }
-  h1{
-    margin:0;font-size:22px;color:#3e2730;
-  }
-  .recipient{
-    font-weight:700;color:var(--accent);font-size:28px;margin-top:2px;
-  }
-  p.lead{margin:0;color:#5b5260;font-size:14px;line-height:1.35}
-  .controls{margin-top:auto;display:flex;gap:8px;width:100%}
-  .btn{
-    background:linear-gradient(180deg,#fff,#ffeef6);
-    border:1px solid rgba(214,51,132,0.12);
-    padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600;
-    box-shadow: 0 6px 18px rgba(214,51,132,0.06);
-  }
-  .btn.secondary{background:transparent;border:1px solid rgba(0,0,0,0.06);box-shadow:none;font-weight:600}
-  .small{font-size:13px;padding:8px 10px;border-radius:8px}
-
-  /* vase and flowers styling */
-  .vase { filter: drop-shadow(0 10px 20px rgba(10,10,20,0.06)); }
-  .stem { stroke: #2b6b3a; stroke-width:3.5; fill:none; stroke-linecap:round; }
-  .leaf { transform-box: fill-box; transform-origin:center; opacity:0.98; }
-
-  /* petals more natural using gradients */
-  .petal { transform-box: fill-box; transform-origin:center; stroke:transparent; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.06)); }
-  .center { filter: drop-shadow(0 4px 6px rgba(0,0,0,0.06)); }
-
-  /* animations */
-  .petal { animation: petalBloom 900ms cubic-bezier(.2,.9,.3,1) both; }
-  .flowerGroup { animation: flowerFloat 6.2s ease-in-out infinite; }
-  .stemGroup .stem { animation: stemSway 5.6s ease-in-out infinite; }
-  .leaf { animation: leafBreathe 3.4s ease-in-out infinite; }
-
-  @keyframes petalBloom {
-    0% { transform: scale(0.15) translateY(18px); opacity:0 }
-    70% { transform: scale(1.06) translateY(-6px); opacity:1 }
-    100% { transform: scale(1) translateY(0); opacity:1 }
-  }
-  @keyframes flowerFloat {
-    0% { transform: translateY(0px) rotate(0deg) }
-    40% { transform: translateY(-6px) rotate(0.6deg) }
-    80% { transform: translateY(0px) rotate(-0.4deg) }
-    100%{ transform: translateY(0px) rotate(0deg) }
-  }
-  @keyframes stemSway {
-    0% { transform: translateX(0px) rotate(0deg) }
-    25% { transform: translateX(6px) rotate(1deg) }
-    50% { transform: translateX(0px) rotate(0deg) }
-    75% { transform: translateX(-6px) rotate(-1deg) }
-    100%{ transform: translateX(0px) rotate(0deg) }
-  }
-  @keyframes leafBreathe {
-    0% { transform: scale(1) }
-    50% { transform: scale(1.06) }
-    100%{ transform: scale(1) }
-  }
-
-  /* hearts reveal */
-  .hearts-container{ position:absolute; inset:0; pointer-events:none; overflow:visible; }
-  .heart{
-    position:absolute; width:28px;height:28px;display:flex;align-items:center;justify-content:center;
-    transform-origin:center; opacity:0; font-size:20px;
-    animation: heartRise 1.8s cubic-bezier(.2,.9,.3,1) forwards;
-  }
-  @keyframes heartRise {
-    0% { transform: translateY(0) scale(.8); opacity:0 }
-    20%{ opacity:1; transform: translateY(-10px) scale(1.05) }
-    60%{ transform: translateY(-80px) scale(0.95); opacity:0.9 }
-    100%{ transform: translateY(-160px) scale(.8); opacity:0 }
-  }
-
-  /* surprise overlay */
-  .overlay{
-    position:fixed; inset:0; display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(180deg, rgba(20,8,20,0.18), rgba(20,8,20,0.36));
-    opacity:0; pointer-events:none; transition:opacity .28s ease; z-index:60;
-  }
-  .overlay.show{ opacity:1; pointer-events:all; }
-  .card {
-    width:min(720px,92vw); background:linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,248,250,0.98));
-    border-radius:14px;padding:28px;box-shadow:0 24px 60px rgba(10,10,20,0.28); text-align:center;
-  }
-  .card h2{ margin:0;font-size:28px;color:#3e2730 }
-  .card p{ color:#564a56;margin-top:10px; font-size:16px; line-height:1.45}
-  .closeBtn{ margin-top:18px; background:var(--accent); color:white; border:none;padding:10px 16px;border-radius:10px; cursor:pointer; font-weight:600; box-shadow: 0 8px 24px rgba(214,51,132,0.14) }
-  footer.credit{ margin-top:12px;color:#856f7b;font-size:13px }
-
-  /* responsive */
-  @media (max-width:960px){
-    .stage{ grid-template-columns:1fr; grid-auto-rows:1fr; height:94vh; padding:16px; gap:12px }
-    .panel{ align-items:center;text-align:center }
-  }
+  body{display:flex;align-items:center;justify-content:center;
+    background: linear-gradient(180deg,#fff6f9,#fff0f6);overflow:hidden;}
+  .stage{width:min(920px,94vw);height:min(720px,84vh);
+    background:linear-gradient(180deg,rgba(255,255,255,0.98),rgba(255,248,250,0.98));
+    border-radius:18px;box-shadow:0 18px 40px var(--shadow);padding:28px;display:grid;
+    grid-template-columns:1fr 360px;gap:18px;align-items:center;overflow:visible;}
+  .canvas{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;}
+  svg.floral{width:100%;height:100%;max-height:640px;overflow:visible;}
+  .panel{padding:18px;display:flex;flex-direction:column;gap:12px}
+  h1{margin:0;font-size:22px;color:#3e2730} .recipient{font-weight:700;color:var(--accent);font-size:28px}
+  p.lead{margin:0;color:#5b5260;font-size:14px}
+  .controls{margin-top:auto;display:flex;gap:8px}
+  .btn{background:linear-gradient(180deg,#fff,#ffeef6);border:1px solid rgba(214,51,132,0.12);
+    padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600}
+  .btn.secondary{background:transparent;border:1px solid rgba(0,0,0,0.06)}
+  /* animations & shapes */
+  .stem{stroke:#2b6b3a;stroke-width:3.5;fill:none;stroke-linecap:round;transform-box:fill-box;transform-origin:center}
+  .petal{transform-box:fill-box;transform-origin:center;filter:drop-shadow(0 4px 10px rgba(0,0,0,0.06))}
+  .center{filter:drop-shadow(0 4px 6px rgba(0,0,0,0.06))}
+  .petal{animation:petalBloom .9s cubic-bezier(.2,.9,.3,1) both}
+  .flowerGroup{animation:flowerFloat 6.2s ease-in-out infinite}
+  @keyframes petalBloom{0%{transform:scale(.15) translateY(18px);opacity:0}70%{transform:scale(1.06) translateY(-6px);opacity:1}100%{transform:scale(1) translateY(0)}}
+  @keyframes flowerFloat{0%{transform:translateY(0)}40%{transform:translateY(-6px)}80%{transform:translateY(0)}}
+  .hearts-container{position:absolute;inset:0;pointer-events:none}
+  .heart{position:absolute;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:20px;opacity:0;animation:heartRise 1.8s cubic-bezier(.2,.9,.3,1) forwards}
+  @keyframes heartRise{0%{transform:translateY(0) scale(.8);opacity:0}20%{opacity:1;transform:translateY(-10px) scale(1.05)}60%{transform:translateY(-80px) scale(.95);opacity:.9}100%{transform:translateY(-160px) scale(.8);opacity:0}}
+  .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg, rgba(20,8,20,0.18), rgba(20,8,20,0.36));opacity:0;pointer-events:none;transition:opacity .28s;z-index:60}
+  .overlay.show{opacity:1;pointer-events:all}
+  .card{width:min(720px,92vw);background:#fff;border-radius:14px;padding:28px;text-align:center;box-shadow:0 24px 60px rgba(10,10,20,0.28)}
+  .closeBtn{margin-top:18px;background:var(--accent);color:white;border:none;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600}
+  @media (max-width:960px){.stage{grid-template-columns:1fr;grid-auto-rows:1fr;height:94vh;padding:16px}}
 </style>
 </head>
 <body>
-
-<div class="stage" id="stage">
-
-  <!-- left: SVG floral scene -->
-  <div class="canvas" id="canvas">
-    <svg class="floral" viewBox="0 0 1000 700" aria-hidden="false" role="img" id="floralSVG">
+<div class="stage">
+  <div class="canvas">
+    <!-- SVG with static fallback flowers included (guaranteed visible) -->
+    <svg class="floral" viewBox="0 0 1000 700" id="floralSVG" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <!-- petal & center gradients -->
-        <radialGradient id="petalG1" cx="30%" cy="30%">
-          <stop offset="0%" stop-color="#ffb6c9"/>
-          <stop offset="60%" stop-color="#ff6b8d"/>
-          <stop offset="100%" stop-color="#d64b6d"/>
-        </radialGradient>
-        <radialGradient id="petalG2" cx="30%" cy="30%">
-          <stop offset="0%" stop-color="#ffd9c8"/>
-          <stop offset="60%" stop-color="#ff8aa3"/>
-          <stop offset="100%" stop-color="#e0667f"/>
-        </radialGradient>
-        <radialGradient id="centerG" cx="40%" cy="40%">
-          <stop offset="0%" stop-color="#fff9d6"/>
-          <stop offset="100%" stop-color="#ffd166"/>
-        </radialGradient>
-
-        <linearGradient id="vaseGrad" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
-          <stop offset="100%" stop-color="#ffe6ee" stop-opacity="1"/>
-        </linearGradient>
-
-        <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="8" result="b"/>
-          <feBlend in="SourceGraphic" in2="b"/>
-        </filter>
+        <radialGradient id="petalG1" cx="30%" cy="30%"><stop offset="0%" stop-color="#ffb6c9"/><stop offset="60%" stop-color="#ff6b8d"/><stop offset="100%" stop-color="#d64b6d"/></radialGradient>
+        <radialGradient id="petalG2" cx="30%" cy="30%"><stop offset="0%" stop-color="#ffd9c8"/><stop offset="60%" stop-color="#ff8aa3"/><stop offset="100%" stop-color="#e0667f"/></radialGradient>
+        <radialGradient id="centerG" cx="40%" cy="40%"><stop offset="0%" stop-color="#fff9d6"/><stop offset="100%" stop-color="#ffd166"/></radialGradient>
+        <linearGradient id="vaseGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/><stop offset="100%" stop-color="#ffe6ee" stop-opacity="1"/></linearGradient>
       </defs>
 
       <!-- vase -->
@@ -198,21 +58,47 @@
         <path d="M-140 10 C-100 140 100 140 140 10 L120 240 C60 280 -60 280 -120 240 Z" fill="url(#vaseGrad)" />
       </g>
 
-      <!-- stems + leaves (generated for multiple flowers) -->
-      <g id="stemsLayer" transform="translate(0,0)"></g>
+      <!-- STATIC flowers (fallback) -->
+      <g id="staticFlowers">
+        <!-- left flower -->
+        <g class="flowerGroup" transform="translate(260,220)">
+          <ellipse class="petal" rx="48" ry="28" cx="0" cy="-38" fill="url(#petalG1)" transform="rotate(0)"/>
+          <ellipse class="petal" rx="48" ry="28" cx="0" cy="-38" fill="url(#petalG1)" transform="rotate(45)"/>
+          <ellipse class="petal" rx="48" ry="28" cx="0" cy="-38" fill="url(#petalG1)" transform="rotate(90)"/>
+          <ellipse class="petal" rx="48" ry="28" cx="0" cy="-38" fill="url(#petalG1)" transform="rotate(135)"/>
+          <circle class="center" r="14" fill="url(#centerG)"/>
+        </g>
 
-      <!-- flowers layer -->
-      <g id="flowersLayer"></g>
+        <!-- middle flower -->
+        <g class="flowerGroup" transform="translate(500,180)">
+          <ellipse class="petal" rx="56" ry="32" cx="0" cy="-46" fill="url(#petalG2)" transform="rotate(0)"/>
+          <ellipse class="petal" rx="56" ry="32" cx="0" cy="-46" fill="url(#petalG2)" transform="rotate(60)"/>
+          <ellipse class="petal" rx="56" ry="32" cx="0" cy="-46" fill="url(#petalG2)" transform="rotate(120)"/>
+          <circle class="center" r="16" fill="url(#centerG)"/>
+        </g>
 
-      <!-- small label under vase -->
+        <!-- right flower -->
+        <g class="flowerGroup" transform="translate(700,230)">
+          <ellipse class="petal" rx="44" ry="26" cx="0" cy="-36" fill="url(#petalG1)" transform="rotate(0)"/>
+          <ellipse class="petal" rx="44" ry="26" cx="0" cy="-36" fill="url(#petalG1)" transform="rotate(72)"/>
+          <ellipse class="petal" rx="44" ry="26" cx="0" cy="-36" fill="url(#petalG1)" transform="rotate(144)"/>
+          <circle class="center" r="12" fill="url(#centerG)"/>
+        </g>
+
+        <!-- small bloom -->
+        <g class="flowerGroup" transform="translate(420,140)">
+          <ellipse class="petal" rx="30" ry="18" cx="0" cy="-28" fill="url(#petalG2)" transform="rotate(0)"/>
+          <ellipse class="petal" rx="30" ry="18" cx="0" cy="-28" fill="url(#petalG2)" transform="rotate(72)"/>
+          <circle class="center" r="9" fill="url(#centerG)"/>
+        </g>
+      </g>
+
       <text x="500" y="680" text-anchor="middle" fill="#6b7280" font-size="18">A little bouquet for you</text>
     </svg>
 
-    <!-- hearts container (DOM overlay for easier animation) -->
     <div class="hearts-container" id="hearts"></div>
   </div>
 
-  <!-- right: controls and message -->
   <div class="panel">
     <div>
       <h1>For</h1>
@@ -225,9 +111,7 @@
       <button class="btn secondary small" id="downloadBtn" style="margin-left:auto">Download as image</button>
     </div>
 
-    <div style="margin-top:12px; font-size:13px; color:#7b6b77">
-      Tip: Click any flower for the surprise. Use Download to save a PNG of the bouquet.
-    </div>
+    <div style="margin-top:12px;font-size:13px;color:#7b6b77">Tip: Click any flower for the surprise. Use Download to save a PNG of the bouquet.</div>
   </div>
 </div>
 
@@ -237,135 +121,22 @@
     <h2 id="surpriseTitle">For Evan — A Surprise</h2>
     <p id="surpriseText">Roses are lovely, violets are true — every moment sparkles more with you. Will you be my Valentine?</p>
     <button class="closeBtn" id="closeOverlay">Close & Return</button>
-    <div class="credit">Made with ❤️</div>
+    <div class="credit" style="margin-top:12px;color:#856f7b;font-size:13px">Made with ❤️</div>
   </div>
 </div>
 
 <script>
-/* ---------- CONFIG ---------- */
-const recipientName = "Evan"; // dynamic name (already set in UI)
-const surpriseMessage = "Roses are lovely, violets are true — every moment sparkles more with you. Will you be my Valentine?";
-const flowerCount = 6; // number of flowers
-
-/* ---------- UI wiring ---------- */
+/* Keep the dynamic behavior, but flowers will now show as static fallback if JS can't create them */
+const recipientName = "Evan";
 document.getElementById('recipient').textContent = recipientName;
-document.getElementById('surpriseText').textContent = surpriseMessage;
+document.getElementById('surpriseText').textContent = "Roses are lovely, violets are true — every moment sparkles more with you. Will you be my Valentine?";
 
-/* ---------- Build flowers and stems ---------- */
-const flowersLayer = document.getElementById('flowersLayer');
-const stemsLayer = document.getElementById('stemsLayer');
-const svgNS = "http://www.w3.org/2000/svg";
-
-function rand(min,max){ return Math.random()*(max-min)+min; }
-
-// generate positions in a soft arc above vase
-const baseX = 500;
-const baseY = 380;
-const spread = 280;
-
-for(let i=0;i<flowerCount;i++){
-  // position along arc
-  const t = i/(flowerCount-1);
-  const angle = (t-0.5)*Math.PI*0.6;
-  const r = 120 + Math.pow(Math.abs((t-0.5)),0.7)*spread;
-  const x = baseX + Math.sin(angle)*r + rand(-18,18);
-  const y = baseY - Math.cos(angle)*(120 + rand(-10,40)) + rand(-20,14);
-
-  // draw stem path
-  const stemPath = document.createElementNS(svgNS,'path');
-  stemPath.setAttribute('d', `M ${baseX} ${baseY+30} C ${baseX + (x-baseX)*0.25} ${baseY-40}, ${x-10} ${y+60}, ${x} ${y+30}`);
-  stemPath.setAttribute('class','stem');
-  stemPath.style.animationDelay = (i*0.2)+'s';
-  stemsLayer.appendChild(stemPath);
-
-  // leaf occasionally
-  if(Math.random()>.4){
-    const leaf = document.createElementNS(svgNS,'path');
-    leaf.setAttribute('d','M0 0 C18 8 40 8 58 0 C40 -8 18 -8 0 0 Z');
-    leaf.setAttribute('fill','#3aa28a');
-    leaf.setAttribute('class','leaf');
-    const rotate = (i%2===0? -20 : 18) + rand(-6,6);
-    leaf.setAttribute('transform', `translate(${x-10},${y+40}) rotate(${rotate}) scale(${0.9+Math.random()*0.3})`);
-    leaf.style.animationDelay = (i*0.18)+'s';
-    stemsLayer.appendChild(leaf);
-  }
-
-  // flower group (petals + center)
-  const fg = document.createElementNS(svgNS,'g');
-  fg.setAttribute('class','flowerGroup');
-  fg.setAttribute('transform', `translate(${x},${y})`);
-  fg.style.animationDelay = (i*0.12)+'s';
-
-  const petalCount = 6 + Math.floor(Math.random()*3);
-  const petalSize = 36 + Math.random()*28;
-
-  // choose palette
-  const pal = (i%2===0)? 'petalG1' : 'petalG2';
-  for(let p=0;p<petalCount;p++){
-    const g = document.createElementNS(svgNS,'g');
-    const ang = (360/petalCount)*p;
-    const ellipse = document.createElementNS(svgNS,'ellipse');
-    ellipse.setAttribute('rx', petalSize);
-    ellipse.setAttribute('ry', petalSize*0.58);
-    ellipse.setAttribute('cx', 0);
-    ellipse.setAttribute('cy', -petalSize*0.6);
-    ellipse.setAttribute('fill', `url(#${pal})`);
-    ellipse.setAttribute('class','petal');
-    ellipse.style.transformOrigin = 'center';
-    ellipse.style.animationDelay = (0.04*p + i*0.06)+'s';
-    g.setAttribute('transform', `rotate(${ang})`);
-    g.appendChild(ellipse);
-    fg.appendChild(g);
-  }
-
-  // center
-  const center = document.createElementNS(svgNS,'circle');
-  center.setAttribute('r', 12 + Math.random()*8);
-  center.setAttribute('fill','url(#centerG)');
-  center.setAttribute('class','center');
-  fg.appendChild(center);
-
-  // clickable: reveal surprise
-  fg.style.cursor = 'pointer';
-  fg.addEventListener('click', (ev) => {
-    ev.stopPropagation();
-    showSurprise({x: x, y: y});
-  });
-
-  flowersLayer.appendChild(fg);
-}
-
-/* ---------- Surprise behavior ---------- */
 const overlay = document.getElementById('overlay');
 const closeOverlay = document.getElementById('closeOverlay');
 const revealAllBtn = document.getElementById('revealAll');
 const heartsContainer = document.getElementById('hearts');
 
-function showSurprise(position){
-  // reveal overlay card
-  overlay.classList.add('show');
-  overlay.setAttribute('aria-hidden','false');
-
-  // spawn hearts around the clicked position
-  spawnHearts(position.x, position.y);
-}
-
-closeOverlay.addEventListener('click', ()=> {
-  overlay.classList.remove('show');
-  overlay.setAttribute('aria-hidden','true');
-});
-
-// reveal all: open overlay and spawn hearts across canvas
-revealAllBtn.addEventListener('click', ()=>{
-  overlay.classList.add('show');
-  overlay.setAttribute('aria-hidden','false');
-  // spawn cluster hearts at several points
-  const points = [{x:420,y:200},{x:540,y:180},{x:500,y:260},{x:600,y:220}];
-  points.forEach(pt => spawnHearts(pt.x, pt.y, 8));
-});
-
-/* ---------- hearts animation (DOM overlay for easy layering) ---------- */
-function spawnHearts(cx, cy, count=6){
+function spawnHearts(cx, cy, count=8){
   for(let i=0;i<count;i++){
     const el = document.createElement('div');
     el.className = 'heart';
@@ -373,53 +144,50 @@ function spawnHearts(cx, cy, count=6){
     el.style.top = (cy - 14 + (Math.random()*40-20)) + 'px';
     el.style.fontSize = (14 + Math.random()*18) + 'px';
     el.textContent = ['❤','💗','💕'][Math.floor(Math.random()*3)];
-    // random delay so they cascade
-    el.style.animationDelay = (Math.random()*0.2)+'s';
+    el.style.animationDelay = (Math.random()*0.25)+'s';
     heartsContainer.appendChild(el);
-    // remove after animation
-    setTimeout(()=> el.remove(), 2400 + Math.random()*900);
+    setTimeout(()=> el.remove(), 2600 + Math.random()*900);
   }
 }
 
-/* ---------- image download (canvas snapshot) ---------- */
+document.getElementById('floralSVG').addEventListener('click', (ev)=>{
+  // if user clicks near a flower area, show surprise; approximate hit by bounding boxes
+  const rect = ev.target.getBoundingClientRect ? ev.target.getBoundingClientRect() : {left:ev.clientX, top:ev.clientY};
+  // Use click position relative to SVG
+  const svg = document.getElementById('floralSVG');
+  const pt = svg.createSVGPoint(); pt.x = ev.clientX; pt.y = ev.clientY;
+  const ctm = svg.getScreenCTM(); // might be null in some viewers
+  let x = ev.clientX, y = ev.clientY;
+  try { const inv = ctm.inverse(); const loc = pt.matrixTransform(inv); x = loc.x; y = loc.y; } catch(e){}
+  // show overlay and hearts at click position
+  overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
+  spawnHearts(x, y, 8);
+});
+
+// reveal all button
+revealAllBtn.addEventListener('click', ()=>{
+  overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
+  const points = [{x:420,y:200},{x:540,y:180},{x:500,y:260},{x:600,y:220}];
+  points.forEach(pt=>spawnHearts(pt.x, pt.y, 8));
+});
+closeOverlay.addEventListener('click', ()=> { overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); });
 document.getElementById('downloadBtn').addEventListener('click', async ()=>{
-  // convert svg to image, draw on canvas and download PNG
   const svg = document.getElementById('floralSVG');
   const serializer = new XMLSerializer();
   const svgStr = serializer.serializeToString(svg);
   const blob = new Blob([svgStr], {type:'image/svg+xml;charset=utf-8'});
   const url = URL.createObjectURL(blob);
   try {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.src = url;
+    const img = new Image(); img.crossOrigin='anonymous'; img.src=url;
     await new Promise((res,rej)=>{ img.onload=res; img.onerror=rej; });
-    const canvas = document.createElement('canvas');
-    canvas.width = 1200; canvas.height = 840;
-    const ctx = canvas.getContext('2d');
-    // white background
-    ctx.fillStyle = '#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    const canvas = document.createElement('canvas'); canvas.width=1200; canvas.height=840;
+    const ctx = canvas.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
     ctx.drawImage(img,0,0,canvas.width,canvas.height);
-    const data = canvas.toDataURL('image/png');
-    const a = document.createElement('a');
-    a.href = data; a.download = `valentine_for_${recipientName}.png`; document.body.appendChild(a); a.click(); a.remove();
-  } catch(e){
-    alert('Sorry — couldn\\'t create image in this browser.');
-  } finally { URL.revokeObjectURL(url); }
+    const data = canvas.toDataURL('image/png'); const a = document.createElement('a'); a.href=data; a.download=`valentine_for_${recipientName}.png`; document.body.appendChild(a); a.click(); a.remove();
+  } catch(e){ alert('Sorry — couldn\\'t create image in this browser.'); } finally { URL.revokeObjectURL(url); }
 });
-
-/* ---------- accessibility: close overlay on ESC ---------- */
-document.addEventListener('keydown', (ev)=> {
-  if(ev.key === 'Escape') overlay.classList.remove('show');
-});
-
-/* ---------- small: prevent accidental page clicks triggering overlay --- */
-document.getElementById('floralSVG').addEventListener('click', (ev)=>{
-  // clicking empty space does nothing
-});
-
-// Initialize: nothing else needed
-console.log("Floral scene ready for", recipientName);
+document.addEventListener('keydown',(ev)=>{ if(ev.key==='Escape') overlay.classList.remove('show'); });
+console.log('Static fallback loaded for', recipientName);
 </script>
 </body>
 </html>
