@@ -5,74 +5,89 @@
 <title>Valentine Bouquet</title>
 <style>
     body {
-        background: #ffeef4;
+        background: #fff0f6;
         font-family: "Georgia", serif;
         text-align: center;
-        padding-top: 40px;
+        padding-top: 60px;
     }
 
     h1 {
-        font-size: 28px;
+        font-size: 32px;
         color: #b30059;
-        margin-bottom: 5px;
+        margin-bottom: 0;
     }
 
     h2 {
-        font-size: 22px;
+        font-size: 24px;
         color: #cc0066;
-        margin-top: 0;
-        margin-bottom: 30px;
+        margin-top: 5px;
+        margin-bottom: 60px;
     }
 
-    /* Vase + Roses */
+    /* Vase */
     .vase {
-        width: 120px;
-        height: 160px;
+        width: 140px;
+        height: 180px;
         background: #b3e0ff;
-        border-radius: 0 0 60px 60px;
+        border-radius: 0 0 70px 70px;
         margin: 0 auto;
         position: relative;
-        border: 3px solid #66b3ff;
+        border: 4px solid #66b3ff;
+        padding-top: 20px;
     }
 
-    .rose {
-        width: 20px;
-        height: 20px;
-        background: red;
-        border-radius: 50%;
+    /* Stems container */
+    .stems {
         position: absolute;
+        top: -140px;
         left: 50%;
         transform: translateX(-50%);
+        width: 200px;
+        height: 150px;
     }
 
     .stem {
         width: 4px;
-        height: 80px;
+        height: 140px;
         background: green;
         position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        top: 20px;
+        bottom: 0;
+        border-radius: 2px;
     }
 
-    /* Position each rose */
-    .r1 { top: -40px; left: 50%; }
-    .r2 { top: -30px; left: 30%; }
-    .r3 { top: -30px; left: 70%; }
-    .r4 { top: -20px; left: 20%; }
-    .r5 { top: -20px; left: 80%; }
-    .r6 { top: -10px; left: 40%; }
-    .r7 { top: -10px; left: 60%; }
+    /* Roses */
+    .rose {
+        font-size: 40px;
+        position: absolute;
+        transform: translateX(-50%);
+    }
 
-    /* Surprise Button */
+    /* Positioning stems + roses */
+    .s1 { left: 50px; }
+    .s2 { left: 80px; }
+    .s3 { left: 110px; }
+    .s4 { left: 140px; }
+    .s5 { left: 170px; }
+    .s6 { left: 95px; height: 160px; }
+    .s7 { left: 125px; height: 160px; }
+
+    .r1 { top: -20px; left: 50px; }
+    .r2 { top: -30px; left: 80px; }
+    .r3 { top: -40px; left: 110px; }
+    .r4 { top: -30px; left: 140px; }
+    .r5 { top: -20px; left: 170px; }
+    .r6 { top: -50px; left: 95px; }
+    .r7 { top: -50px; left: 125px; }
+
+    /* Button */
     button {
-        margin-top: 30px;
-        padding: 12px 25px;
-        font-size: 18px;
+        margin-top: 60px;
+        padding: 14px 30px;
+        font-size: 20px;
         background: #ff4d88;
         color: white;
         border: none;
-        border-radius: 8px;
+        border-radius: 10px;
         cursor: pointer;
     }
 
@@ -84,14 +99,14 @@
     .heart {
         position: fixed;
         color: #ff1a75;
-        font-size: 24px;
+        font-size: 26px;
         animation: floatUp 3s linear forwards;
         pointer-events: none;
     }
 
     @keyframes floatUp {
         0% { transform: translateY(0); opacity: 1; }
-        100% { transform: translateY(-200px); opacity: 0; }
+        100% { transform: translateY(-250px); opacity: 0; }
     }
 </style>
 </head>
@@ -101,27 +116,36 @@
 <h2>Will you be my valentine?</h2>
 
 <div class="vase">
-    <div class="stem"></div>
-    <div class="rose r1"></div>
-    <div class="rose r2"></div>
-    <div class="rose r3"></div>
-    <div class="rose r4"></div>
-    <div class="rose r5"></div>
-    <div class="rose r6"></div>
-    <div class="rose r7"></div>
+    <div class="stems">
+        <div class="stem s1"></div>
+        <div class="stem s2"></div>
+        <div class="stem s3"></div>
+        <div class="stem s4"></div>
+        <div class="stem s5"></div>
+        <div class="stem s6"></div>
+        <div class="stem s7"></div>
+
+        <div class="rose r1">🌹</div>
+        <div class="rose r2">🌹</div>
+        <div class="rose r3">🌹</div>
+        <div class="rose r4">🌹</div>
+        <div class="rose r5">🌹</div>
+        <div class="rose r6">🌹</div>
+        <div class="rose r7">🌹</div>
+    </div>
 </div>
 
-<button onclick="releaseHearts()">Surprise Now</button>
+<button onclick="releaseHearts()">I love you</button>
 
 <script>
 function releaseHearts() {
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 40; i++) {
         let heart = document.createElement("div");
         heart.classList.add("heart");
         heart.innerHTML = "❤️";
         heart.style.left = Math.random() * window.innerWidth + "px";
-        heart.style.top = (window.innerHeight - 50) + "px";
-        heart.style.fontSize = (20 + Math.random() * 20) + "px";
+        heart.style.top = (window.innerHeight - 80) + "px";
+        heart.style.fontSize = (24 + Math.random() * 20) + "px";
         document.body.appendChild(heart);
 
         setTimeout(() => heart.remove(), 3000);
