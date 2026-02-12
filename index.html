@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Valentine Bouquet</title>
+
 <style>
     body {
         background: #fff0f6;
@@ -26,10 +27,10 @@
 
     /* Vase */
     .vase {
-        width: 140px;
-        height: 180px;
+        width: 160px;
+        height: 200px;
         background: #b3e0ff;
-        border-radius: 0 0 70px 70px;
+        border-radius: 0 0 80px 80px;
         margin: 0 auto;
         position: relative;
         border: 4px solid #66b3ff;
@@ -39,50 +40,51 @@
     /* Stems container */
     .stems {
         position: absolute;
-        top: -140px;
+        top: -180px;
         left: 50%;
         transform: translateX(-50%);
-        width: 200px;
-        height: 150px;
+        width: 260px;
+        height: 200px;
     }
 
     .stem {
-        width: 4px;
-        height: 140px;
-        background: green;
+        width: 5px;
+        height: 180px;
+        background: #2e8b57;
         position: absolute;
         bottom: 0;
-        border-radius: 2px;
+        border-radius: 3px;
     }
+
+    /* Slightly spaced stem positions */
+    .s1 { left: 40px; }
+    .s2 { left: 80px; }
+    .s3 { left: 120px; }
+    .s4 { left: 160px; }
+    .s5 { left: 200px; }
+    .s6 { left: 100px; height: 200px; }
+    .s7 { left: 140px; height: 200px; }
 
     /* Roses */
     .rose {
-        font-size: 40px;
+        width: 140px;
         position: absolute;
         transform: translateX(-50%);
     }
 
-    /* Positioning stems + roses */
-    .s1 { left: 50px; }
-    .s2 { left: 80px; }
-    .s3 { left: 110px; }
-    .s4 { left: 140px; }
-    .s5 { left: 170px; }
-    .s6 { left: 95px; height: 160px; }
-    .s7 { left: 125px; height: 160px; }
-
-    .r1 { top: -20px; left: 50px; }
-    .r2 { top: -30px; left: 80px; }
-    .r3 { top: -40px; left: 110px; }
-    .r4 { top: -30px; left: 140px; }
-    .r5 { top: -20px; left: 170px; }
-    .r6 { top: -50px; left: 95px; }
-    .r7 { top: -50px; left: 125px; }
+    /* Slight spacing cluster layout */
+    .r1 { top: -40px; left: 40px; }
+    .r2 { top: -60px; left: 80px; }
+    .r3 { top: -80px; left: 120px; }
+    .r4 { top: -60px; left: 160px; }
+    .r5 { top: -40px; left: 200px; }
+    .r6 { top: -100px; left: 100px; }
+    .r7 { top: -100px; left: 140px; }
 
     /* Button */
     button {
-        margin-top: 60px;
-        padding: 14px 30px;
+        margin-top: 70px;
+        padding: 14px 32px;
         font-size: 20px;
         background: #ff4d88;
         color: white;
@@ -110,6 +112,7 @@
     }
 </style>
 </head>
+
 <body>
 
 <h1>For Evan,</h1>
@@ -117,6 +120,8 @@
 
 <div class="vase">
     <div class="stems">
+
+        <!-- Stems -->
         <div class="stem s1"></div>
         <div class="stem s2"></div>
         <div class="stem s3"></div>
@@ -125,13 +130,15 @@
         <div class="stem s6"></div>
         <div class="stem s7"></div>
 
-        <div class="rose r1">🌹</div>
-        <div class="rose r2">🌹</div>
-        <div class="rose r3">🌹</div>
-        <div class="rose r4">🌹</div>
-        <div class="rose r5">🌹</div>
-        <div class="rose r6">🌹</div>
-        <div class="rose r7">🌹</div>
+        <!-- Roses -->
+        <img src="rose.png" class="rose r1">
+        <img src="rose.png" class="rose r2">
+        <img src="rose.png" class="rose r3">
+        <img src="rose.png" class="rose r4">
+        <img src="rose.png" class="rose r5">
+        <img src="rose.png" class="rose r6">
+        <img src="rose.png" class="rose r7">
+
     </div>
 </div>
 
