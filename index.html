@@ -192,9 +192,6 @@
         </filter>
       </defs>
 
-      <!-- subtle background vignette -->
-      <rect x="0" y="0" width="1000" height="700" fill="url(#bg)" opacity="0" />
-
       <!-- vase -->
       <g transform="translate(500,520)" class="vase">
         <ellipse cx="0" cy="36" rx="200" ry="36" fill="rgba(0,0,0,0.06)"/>
@@ -220,17 +217,16 @@
     <div>
       <h1>For</h1>
       <div class="recipient" id="recipient">Evan</div>
-      <p class="lead">Soft romantic flowers, a little surprise. Click a flower to reveal the message and release a shower of hearts. Click anywhere to start music.</p>
+      <p class="lead">Soft romantic flowers, a little surprise. Click a flower to reveal the message and release a shower of hearts.</p>
     </div>
 
     <div class="controls">
-      <button class="btn" id="playBtn" title="Play music (click anywhere also works)">Play Music</button>
       <button class="btn secondary small" id="revealAll">Surprise Now</button>
       <button class="btn secondary small" id="downloadBtn" style="margin-left:auto">Download as image</button>
     </div>
 
     <div style="margin-top:12px; font-size:13px; color:#7b6b77">
-      Tip: Click any flower for the surprise. If music doesn't start automatically, press Play or click the page.
+      Tip: Click any flower for the surprise. Use Download to save a PNG of the bouquet.
     </div>
   </div>
 </div>
@@ -245,35 +241,15 @@
   </div>
 </div>
 
-<!-- audio (user must gesture to play) -->
-<audio id="bgMusic" loop preload="auto"></audio>
-
 <script>
 /* ---------- CONFIG ---------- */
 const recipientName = "Evan"; // dynamic name (already set in UI)
 const surpriseMessage = "Roses are lovely, violets are true — every moment sparkles more with you. Will you be my Valentine?";
-const musicFile = "music.mp3"; // put this file in repo root or replace with absolute URL
 const flowerCount = 6; // number of flowers
 
 /* ---------- UI wiring ---------- */
 document.getElementById('recipient').textContent = recipientName;
 document.getElementById('surpriseText').textContent = surpriseMessage;
-
-const audio = document.getElementById('bgMusic');
-audio.src = musicFile; // if you have a hosted mp3, you can set the URL here
-
-// Play music when the user clicks anywhere (first gesture), or when Play button pressed
-let userGestureDone = false;
-function onFirstGesture() {
-  if (userGestureDone) return;
-  userGestureDone = true;
-  // try to play - some browsers allow play after user gesture
-  audio.play().catch(()=>{ /* ignore */ });
-}
-document.body.addEventListener('click', onFirstGesture, { once:true });
-document.getElementById('playBtn').addEventListener('click', () => {
-  onFirstGesture();
-});
 
 /* ---------- Build flowers and stems ---------- */
 const flowersLayer = document.getElementById('flowersLayer');
@@ -366,8 +342,6 @@ const revealAllBtn = document.getElementById('revealAll');
 const heartsContainer = document.getElementById('hearts');
 
 function showSurprise(position){
-  // play click flourish
-  onFirstGesture();
   // reveal overlay card
   overlay.classList.add('show');
   overlay.setAttribute('aria-hidden','false');
