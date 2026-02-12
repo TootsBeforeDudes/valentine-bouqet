@@ -20,12 +20,10 @@
   .flower:hover .petal{ transform:scale(1.03) }
   .stem{stroke:#2b6b3a; stroke-width:5; stroke-linecap:round; fill:none}
   .flower{ cursor:pointer }
-  /* --- bubble: no CSS transform (position via SVG transform attribute) --- */
+  /* --- bubble: NO CSS transform; position via SVG transform attribute and animated via <animateTransform> --- */
   .svg-bubble {
-    /* keep transform-origin for potential SVG animation use, but DO NOT apply CSS transform */
-    transform-origin: center bottom;
     opacity: 0;
-    transition: opacity .22s;
+    transition: opacity .18s ease;
     pointer-events: auto; /* allow clicks inside the bubble */
   }
   .svg-bubble.show {
@@ -93,8 +91,15 @@
         </g>
 
         <!-- SVG single-line bubble (hidden until shown) anchored in this SVG -->
-        <!-- start with transform at center top; JS will reposition with SVG coords -->
+        <!-- JS will reposition this group using the SVG 'transform' attribute before playing the slide animation -->
         <g id="bubble" class="svg-bubble hide" transform="translate(350,60)" opacity="0">
+          <!-- animateTransform for slide-up effect: it animates the group's transform from (0, startOffset) -> (0,0) -->
+          <!-- We'll call beginElement() programmatically when showing. -->
+          <animateTransform id="bubbleSlide" attributeName="transform"
+                            type="translate"
+                            additive="sum"
+                            from="0 10" to="0 0"
+                            dur="220ms" fill="freeze" begin="indefinite"/>
           <rect x="-220" y="-36" rx="12" ry="12" width="440" height="42" fill="#fff" stroke="rgba(0,0,0,0.04)"/>
           <path d="M-18 -2 L0 22 L18 -2 Z" fill="#fff" stroke="rgba(0,0,0,0.03)"/>
           <text id="bubbleText" x="0" y="-12" font-family="Inter,Arial" font-size="16" fill="#35272f" text-anchor="middle">Evan — will you be my Valentine?</text>
@@ -118,6 +123,7 @@
   const bubble = document.getElementById('bubble');
   const bubbleText = document.getElementById('bubbleText');
   const bubbleClose = document.getElementById('bubbleClose');
+  const bubbleSlide = document.getElementById('bubbleSlide');
   const recipient = "Evan";
   document.getElementById('recipient').textContent = recipient;
   const singleLine = `${recipient} — will you be my Valentine?`;
@@ -137,21 +143,98 @@
   }
 
   // show bubble at svg point (sx,sy are SVG coordinates)
+  // this positions the bubble using an SVG transform attribute and then triggers the internal <animateTransform>
   function showBubbleAtSvg(sx, sy, text){
     bubbleText.textContent = text;
 
-    // Position bubble above the rose using the SVG transform attribute.
-    // Adjust vertical offset to taste; here we place the bubble ~96 units above the given point.
+    // offset to place bubble above rose; tweak to taste
     const offsetY = 96;
-    bubble.setAttribute('transform', `translate(${sx}, ${sy - offsetY})`);
+    // To create a slide-up, start slightly *below* final position and animate upward.
+    // We'll set the group's base transform to the final position (sx, sy - offsetY),
+    // and the <animateTransform> we defined in the group will add a small upward translate (from "0 10" to "0 0")
+    // to produce the slide-up effect.
+    const finalX = sx;
+    const finalY = sy - offsetY;
+
+    // Set the group's transform to final position (the animateTransform will be additive).
+    bubble.setAttribute('transform', `translate(${finalX}, ${finalY})`);
 
     // reveal via class/opacity
     bubble.classList.add('show');
     bubble.classList.remove('hide');
     bubble.setAttribute('opacity','1');
+
+    // restart animation: if it is mid-play, cancel and then begin
+    try {
+      // Some browsers require calling endElement before beginElement to restart
+      bubbleSlide.endElement && bubbleSlide.endElement();
+    } catch(e){/* ignore if not supported */}
+    // Kick the SVG animate element
+    bubbleSlide.beginElement();
   }
+
   function hideBubble(){
+    // fade out quickly
     bubble.classList.remove('show');
     bubble.classList.add('hide');
     bubble.setAttribute('opacity','0');
-    // (opti
+    // no transform change necessary — it will be repositioned next time it's shown
+  }
+
+  // spawn hearts from svg point
+  function spawnHearts(sx, sy, count=10){
+    const client = svgToClient(sx, sy);
+    for(let i=0;i<count;i++){
+      const el = document.createElement('div');
+      el.className = 'heart';
+      el.textContent = ['❤','💗','💕'][Math.floor(Math.random()*3)];
+      document.body.appendChild(el);
+      const size = 12 + Math.random()*26; el.style.fontSize = size + 'px';
+      const left = client.x + (Math.random()*80 - 40); const top = client.y + (Math.random()*30 - 8);
+      el.style.left = left + 'px'; el.style.top = top + 'px';
+      const dx = (Math.random()*120 - 60); const dy = -(120 + Math.random()*80);
+      el.animate([{transform:'translate(0,0) scale(1)', opacity:1},{transform:`translate(${dx}px,${dy}px) scale(.85)`, opacity:0}], {duration:1400 + Math.random()*800, easing:'cubic-bezier(.2,.9,.3,1)'});
+      setTimeout(()=> el.remove(), 1800 + Math.random()*900);
+    }
+  }
+
+  // attach to hit circles
+  svg.querySelectorAll('.hit').forEach(hit => {
+    hit.addEventListener('click', (ev) => {
+      ev.stopPropagation(); ev.preventDefault();
+      const group = hit.parentNode;
+      const rect = group.getBoundingClientRect();
+      const clientX = rect.left + rect.width/2;
+      const clientY = rect.top + rect.height/2;
+      const svgPt = clientToSvg(clientX, clientY);
+      showBubbleAtSvg(svgPt.x, svgPt.y, singleLine);
+      spawnHearts(svgPt.x, svgPt.y, 12);
+    }, {passive:false});
+  });
+
+  // Surprise button: center flower
+  document.getElementById('surprise').addEventListener('click', ()=>{
+    const centerG = svg.querySelector('[data-name="center"]');
+    const rect = centerG.getBoundingClientRect();
+    const svgPt = clientToSvg(rect.left + rect.width/2, rect.top + rect.height/2);
+    showBubbleAtSvg(svgPt.x, svgPt.y, singleLine);
+    spawnHearts(svgPt.x, svgPt.y, 12);
+  });
+
+  // close bubble (click inside SVG group)
+  bubbleClose.addEventListener('click', (ev)=>{ ev.stopPropagation(); hideBubble(); });
+
+  // clicking outside hides bubble — ensure clicks inside the SVG bubble do not close it
+  document.body.addEventListener('click', (ev)=>{
+    if (ev.target && ev.target.closest && (ev.target.closest('#bubble') || ev.target.closest('.svg-bubble'))) return;
+    hideBubble();
+  });
+
+  // ESC closes
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') hideBubble(); });
+
+  // start hidden
+  hideBubble();
+</script>
+</body>
+</html>
