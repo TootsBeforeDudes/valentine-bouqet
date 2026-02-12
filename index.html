@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>For Evan — Roses (Fixed)</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>For Evan — Roses (Aligned)</title>
 <style>
   :root{ --bg:#fff6f8; --accent:#d63384; --shadow: rgba(10,10,20,0.08); }
   html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);display:flex;align-items:center;justify-content:center}
@@ -14,11 +14,9 @@
   .name{color:var(--accent);font-weight:700;font-size:28px;margin:8px 0}
   .hint{color:#6b6b73;font-size:13px}
   .btn{display:inline-block;padding:8px 12px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:#fff;cursor:pointer;margin-top:12px}
-  /* SVG transform support */
   svg *{ transform-box: fill-box; transform-origin: center; }
-  /* animations */
   .petal{ animation: bloom .9s cubic-bezier(.2,.9,.3,1) both; }
-  .stem{ animation: sway 5.5s ease-in-out infinite; transform-origin: bottom center; }
+  .stem{ animation: sway 5.5s ease-in-out infinite; transform-origin: bottom center; stroke-linecap:round; }
   .roseGroup{ animation: float 6s ease-in-out infinite; }
   @keyframes bloom{0%{transform:scale(.12) translateY(18px);opacity:0}70%{transform:scale(1.06) translateY(-6px);opacity:1}100%{transform:scale(1) translateY(0)}}
   @keyframes sway{0%{transform:rotate(0deg)}25%{transform:rotate(2deg)}50%{transform:rotate(0deg)}75%{transform:rotate(-2deg)}100%{transform:rotate(0deg)}}
@@ -31,10 +29,9 @@
 </style>
 </head>
 <body>
-
 <div class="card">
   <div class="left">
-    <!-- SVG bouquet: stems end at fixed vase coordinates (so they'll always enter the vase) -->
+    <!-- SVG bouquet: each rose group contains its stem (relative) + petals (relative) -->
     <svg id="roses" viewBox="0 0 900 640" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-label="Roses in a vase">
       <defs>
         <radialGradient id="rg1" cx="30%" cy="30%"><stop offset="0%" stop-color="#ffd6dd"/><stop offset="60%" stop-color="#ff8aa3"/><stop offset="100%" stop-color="#d64b6d"/></radialGradient>
@@ -43,50 +40,44 @@
         <linearGradient id="vaseGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.96"/><stop offset="100%" stop-color="#ffeef6"/></linearGradient>
       </defs>
 
-      <!-- vase at known coordinates (base of stems will target these) -->
+      <!-- vase (fixed) -->
       <g id="vase" transform="translate(450,500)">
         <ellipse cx="0" cy="36" rx="220" ry="34" fill="rgba(0,0,0,0.06)"/>
         <path d="M-160 12 C-120 170 120 170 160 12 L140 260 C70 300 -70 300 -140 260 Z" fill="url(#vaseGrad)"/>
       </g>
 
-      <!-- LEFT ROSE -->
-      <!-- Flower coordinate (fx,fy) = (300,360). Stem is absolute path ending at (400,520) inside vase -->
+      <!-- LEFT ROSE group:
+           position at (300,360). The stem path starts at 0,0 and goes down into the vase.
+           This guarantees petals and stem are aligned.
+      -->
       <g class="roseGroup" transform="translate(300,360)" data-name="rose-left" style="cursor:pointer">
-        <!-- absolute stem (ends at 410,520) -->
-        <path class="stem" d="M300 360 C 290 420 320 460 410 520" stroke="#2b6b3a" stroke-width="5" fill="none"/>
-        <!-- petals centered at (300,360) via group transform -->
-        <g transform="translate(0,0)">
-          <path class="petal" d="M0 -30 C34 -66 60 -34 48 -6 C36 22 -6 32 -24 18 C-42 4 -12 -10 0 -30 Z" fill="url(#rg1)"/>
-          <path class="petal" d="M0 -30 C-24 -58 -56 -36 -46 -6 C-36 22 -8 32 10 22 C28 12 16 -6 0 -30 Z" fill="url(#rg2)" transform="rotate(22)"/>
-          <ellipse class="center" rx="12" ry="10" cx="0" cy="-8" fill="url(#centerG)"/>
-        </g>
+        <!-- stem drawn relative to group origin (0,0) -->
+        <path class="stem" d="M0 0 C -10 60 10 100 110 160" stroke="#2b6b3a" stroke-width="5" fill="none"/>
+        <!-- petals (drawn centered on group origin) -->
+        <path class="petal" d="M0 -30 C34 -66 60 -34 48 -6 C36 22 -6 32 -24 18 C-42 4 -12 -10 0 -30 Z" fill="url(#rg1)"/>
+        <path class="petal" d="M0 -30 C-24 -58 -56 -36 -46 -6 C-36 22 -8 32 10 22 C28 12 16 -6 0 -30 Z" fill="url(#rg2)" transform="rotate(22)"/>
+        <ellipse class="center" rx="12" ry="10" cx="0" cy="-8" fill="url(#centerG)"/>
       </g>
 
-      <!-- CENTER ROSE -->
-      <!-- Flower coordinate (460,320). Stem ends at (460,520) -->
+      <!-- CENTER ROSE group at (460,320). Stem ends deeper into vase -->
       <g class="roseGroup" transform="translate(460,320)" data-name="rose-center" style="cursor:pointer">
-        <path class="stem" d="M460 320 C 456 380 448 440 460 520" stroke="#2b6b3a" stroke-width="5" fill="none"/>
-        <g transform="translate(0,0)">
-          <path class="petal" d="M0 -36 C48 -82 96 -44 72 -6 C48 32 6 46 -18 28 C-42 10 -6 -6 0 -36 Z" fill="url(#rg2)"/>
-          <path class="petal" d="M0 -36 C-28 -66 -82 -44 -66 -6 C-50 32 -12 46 14 30 C40 14 10 -4 0 -36 Z" fill="url(#rg1)" transform="rotate(18)"/>
-          <ellipse class="center" rx="16" ry="14" fill="url(#centerG)"/>
-        </g>
+        <path class="stem" d="M0 0 C -6 60 -14 120 0 200" stroke="#2b6b3a" stroke-width="5" fill="none"/>
+        <path class="petal" d="M0 -36 C48 -82 96 -44 72 -6 C48 32 6 46 -18 28 C-42 10 -6 -6 0 -36 Z" fill="url(#rg2)"/>
+        <path class="petal" d="M0 -36 C-28 -66 -82 -44 -66 -6 C-50 32 -12 46 14 30 C40 14 10 -4 0 -36 Z" fill="url(#rg1)" transform="rotate(18)"/>
+        <ellipse class="center" rx="16" ry="14" fill="url(#centerG)"/>
       </g>
 
-      <!-- RIGHT ROSE -->
-      <!-- Flower coordinate (620,360). Stem ends at (500,520) so it visibly goes into vase -->
+      <!-- RIGHT ROSE group at (620,360). Stem goes into vase -->
       <g class="roseGroup" transform="translate(620,360)" data-name="rose-right" style="cursor:pointer">
-        <path class="stem" d="M620 360 C 600 420 540 460 500 520" stroke="#2b6b3a" stroke-width="5" fill="none"/>
-        <g transform="translate(0,0)">
-          <path class="petal" d="M0 -28 C40 -64 76 -36 58 -8 C40 20 4 34 -18 20 C-40 6 -8 -6 0 -28 Z" fill="url(#rg1)"/>
-          <path class="petal" d="M0 -28 C-26 -56 -64 -36 -50 -8 C-36 20 -8 34 10 22 C28 10 12 -6 0 -28 Z" fill="url(#rg2)" transform="rotate(-18)"/>
-          <ellipse class="center" rx="12" ry="10" fill="url(#centerG)"/>
-        </g>
+        <path class="stem" d="M0 0 C -20 60 -80 100 -120 160" stroke="#2b6b3a" stroke-width="5" fill="none"/>
+        <path class="petal" d="M0 -28 C40 -64 76 -36 58 -8 C40 20 4 34 -18 20 C-40 6 -8 -6 0 -28 Z" fill="url(#rg1)"/>
+        <path class="petal" d="M0 -28 C-26 -56 -64 -36 -50 -8 C-36 20 -8 34 10 22 C28 10 12 -6 0 -28 Z" fill="url(#rg2)" transform="rotate(-18)"/>
+        <ellipse class="center" rx="12" ry="10" fill="url(#centerG)"/>
       </g>
 
-      <!-- small accent bloom: stem ends at 470,520 -->
+      <!-- small accent bloom at (520,260) -->
       <g class="roseGroup" transform="translate(520,260)">
-        <path class="stem" d="M520 260 C 518 300 500 360 470 520" stroke="#2b6b3a" stroke-width="4" fill="none"/>
+        <path class="stem" d="M0 0 C 0 40 -18 100 -50 260" stroke="#2b6b3a" stroke-width="4" fill="none"/>
         <ellipse class="petal" rx="26" ry="16" cx="0" cy="-22" fill="url(#rg2)"/>
         <ellipse class="center" rx="8" ry="6" cx="0" cy="-6" fill="url(#centerG)"/>
       </g>
@@ -142,13 +133,8 @@
     spawnHearts(cx,cy,12);
   }
 
-  // set up click handlers for the rose groups (use bounding box to approximate)
-  svg.addEventListener('click', (ev)=>{
-    // if clicking a specific rose element, we already handle below via pointer events on groups
-  });
-
   document.querySelectorAll('.roseGroup').forEach(r => {
-    r.addEventListener('click', (ev)=>{
+    r.addEventListener('click', (ev) => {
       ev.stopPropagation();
       showSurpriseAt(ev.clientX, ev.clientY);
     });
@@ -160,7 +146,7 @@
   svg.addEventListener('click', ev=> ev.stopPropagation());
   document.body.addEventListener('click', ()=> { overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); });
 
-  console.log('Fixed-position stems loaded for', recipient);
+  console.log('Aligned stems & petals for', recipient);
 </script>
 </body>
 </html>
