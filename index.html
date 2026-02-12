@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>For Evan — Fixed-size roses</title>
+<title>For Evan — Bouquet</title>
 <style>
   :root{--bg:#fff6f8;--accent:#d63384;--shadow: rgba(10,10,20,0.08)}
   html,body{height:100%;margin:0;background:var(--bg);display:flex;align-items:center;justify-content:center;font-family:Inter,system-ui,Arial;}
   .wrap{width:760px; padding:18px; box-sizing:border-box}
-  .card{width:700px;height:720px;border-radius:12px;background:linear-gradient(180deg,#fff,#fff6f8);box-shadow:0 18px 40px var(--shadow);display:flex;flex-direction:column;align-items:center;padding:18px}
+  .card{width:700px;height:720px;border-radius:12px;background:linear-gradient(180deg,#fff,#fff6f8);box-shadow:0 18px 40px var(--shadow);display:flex;flex-direction:column;align-items:center;padding:18px;position:relative}
   h1{margin:8px 0 0 0;font-size:18px;color:#3a2b33}
   .name{color:var(--accent);font-size:28px;font-weight:700;margin:6px 0}
   .hint{color:#6b7280;text-align:center;margin:6px 0}
@@ -19,18 +19,19 @@
   .petal{filter:drop-shadow(0 6px 10px rgba(0,0,0,0.06)); transition:transform 260ms ease}
   .flower:hover .petal{ transform:scale(1.03) }
   .stem{stroke:#2b6b3a; stroke-width:5; stroke-linecap:round; fill:none}
-  .flower{ cursor:pointer }
-  /* --- bubble: NO CSS transform; position via SVG transform attribute and animated via <animateTransform> --- */
-  .svg-bubble {
-    opacity: 0;
-    transition: opacity .18s ease;
-    pointer-events: auto; /* allow clicks inside the bubble */
-  }
-  .svg-bubble.show {
-    opacity: 1;
-  }
-  .svg-bubble.hide { opacity: 0; }
+  .flower{ cursor:default } /* no popups */
   .heart{ position:fixed; pointer-events:none; z-index:1100 }
+  .final-message{
+    margin-top:12px;
+    font-size:18px;
+    color:#35272f;
+    text-align:center;
+    padding:12px 18px;
+    border-radius:10px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,238,245,0.6));
+    box-shadow: 0 6px 18px rgba(10,10,20,0.04);
+    width:640px;
+  }
 </style>
 </head>
 <body>
@@ -51,137 +52,86 @@
           <path d="M-120 8 C-90 120 90 120 120 8 L100 180 C50 210 -50 210 -100 180 Z" fill="url(#vG)"/>
         </g>
 
-        <!-- LEFT flower group at (170,200) -->
-        <g class="flower" transform="translate(170,200)" data-name="left">
-          <circle class="hit" cx="0" cy="0" r="70" fill="transparent" style="pointer-events:all"/>
-          <!-- stem adjusted to reach into vase -->
+        <!-- FIVE flower groups -->
+        <!-- far-left -->
+        <g class="flower" transform="translate(70,210)" data-name="fl1" aria-label="rose">
+          <path class="stem" d="M0 6 C -8 80 -10 230 120 260"/>
+          <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p1)" transform="rotate(-48)"/>
+          <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p2)" transform="rotate(12)"/>
+          <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p1)" transform="rotate(72)"/>
+          <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p2)" transform="rotate(132)"/>
+          <circle cx="0" cy="-8" r="8" fill="url(#cG)"/>
+        </g>
+
+        <!-- left -->
+        <g class="flower" transform="translate(170,200)" data-name="left" aria-label="rose">
           <path class="stem" d="M0 6 C -8 80 -10 220 120 260"/>
           <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p1)" transform="rotate(-48)"/>
           <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p2)" transform="rotate(12)"/>
           <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p1)" transform="rotate(72)"/>
           <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p2)" transform="rotate(132)"/>
-          <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p1)" transform="rotate(192)"/>
           <circle cx="0" cy="-8" r="8" fill="url(#cG)"/>
         </g>
 
-        <!-- CENTER flower group at (350,170) -->
-        <g class="flower" transform="translate(350,170)" data-name="center">
-          <circle class="hit" cx="0" cy="0" r="90" fill="transparent" style="pointer-events:all"/>
-          <!-- stem adjusted to reach into vase -->
+        <!-- center -->
+        <g class="flower" transform="translate(350,170)" data-name="center" aria-label="rose">
           <path class="stem" d="M0 10 C -6 120 -14 240 0 300"/>
           <ellipse class="petal" rx="48" ry="28" cx="0" cy="-36" fill="url(#p2)" transform="rotate(-48)"/>
           <ellipse class="petal" rx="48" ry="28" cx="0" cy="-36" fill="url(#p1)" transform="rotate(12)"/>
           <ellipse class="petal" rx="48" ry="28" cx="0" cy="-36" fill="url(#p2)" transform="rotate(72)"/>
           <ellipse class="petal" rx="48" ry="28" cx="0" cy="-36" fill="url(#p1)" transform="rotate(132)"/>
-          <ellipse class="petal" rx="48" ry="28" cx="0" cy="-36" fill="url(#p2)" transform="rotate(192)"/>
           <circle cx="0" cy="-10" r="12" fill="url(#cG)"/>
         </g>
 
-        <!-- RIGHT flower group at (530,200) -->
-        <g class="flower" transform="translate(530,200)" data-name="right">
-          <circle class="hit" cx="0" cy="0" r="70" fill="transparent" style="pointer-events:all"/>
-          <!-- stem adjusted to reach into vase -->
+        <!-- right -->
+        <g class="flower" transform="translate(530,200)" data-name="right" aria-label="rose">
           <path class="stem" d="M0 6 C -6 80 -30 220 -120 260"/>
           <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p1)" transform="rotate(-48)"/>
           <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p2)" transform="rotate(12)"/>
           <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p1)" transform="rotate(72)"/>
           <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p2)" transform="rotate(132)"/>
-          <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p1)" transform="rotate(192)"/>
           <circle cx="0" cy="-8" r="8" fill="url(#cG)"/>
         </g>
 
-        <!-- SVG single-line bubble (hidden until shown) anchored in this SVG -->
-        <!-- JS will reposition this group using the SVG 'transform' attribute before playing the slide animation -->
-        <g id="bubble" class="svg-bubble hide" transform="translate(350,60)" opacity="0">
-          <!-- animateTransform for slide-up effect: it animates the group's transform from (0, startOffset) -> (0,0) -->
-          <!-- We'll call beginElement() programmatically when showing. -->
-          <animateTransform id="bubbleSlide" attributeName="transform"
-                            type="translate"
-                            additive="sum"
-                            from="0 10" to="0 0"
-                            dur="220ms" fill="freeze" begin="indefinite"/>
-          <rect x="-220" y="-36" rx="12" ry="12" width="440" height="42" fill="#fff" stroke="rgba(0,0,0,0.04)"/>
-          <path d="M-18 -2 L0 22 L18 -2 Z" fill="#fff" stroke="rgba(0,0,0,0.03)"/>
-          <text id="bubbleText" x="0" y="-12" font-family="Inter,Arial" font-size="16" fill="#35272f" text-anchor="middle">Evan — will you be my Valentine?</text>
-          <g id="bubbleClose" transform="translate(0,8)" style="cursor:pointer">
-            <rect x="-36" y="0" rx="8" ry="8" width="72" height="26" fill="#d63384"/>
-            <text x="0" y="18" font-family="Inter,Arial" font-size="13" fill="#fff" text-anchor="middle">Close</text>
-          </g>
+        <!-- far-right -->
+        <g class="flower" transform="translate(630,210)" data-name="fl5" aria-label="rose">
+          <path class="stem" d="M0 6 C -6 80 -30 230 -120 260"/>
+          <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p1)" transform="rotate(-48)"/>
+          <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p2)" transform="rotate(12)"/>
+          <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p1)" transform="rotate(72)"/>
+          <ellipse class="petal" rx="36" ry="20" cx="0" cy="-28" fill="url(#p2)" transform="rotate(132)"/>
+          <circle cx="0" cy="-8" r="8" fill="url(#cG)"/>
         </g>
+
       </svg>
 
       <h1>For</h1>
       <div class="name" id="recipient">Evan</div>
-      <p class="hint">Click any rose and the message will appear from that rose.</p>
-      <button id="surprise" >Surprise Now</button>
+      <p class="hint">Clicking roses is disabled — enjoy the bouquet. The Surprise button still makes hearts!</p>
+
+      <button id="surprise">Surprise Now</button>
+
+      <div class="final-message" id="finalMessage">
+        For Evan, will you be my valentine?
+      </div>
     </div>
   </div>
 
 <script>
-  // Robust interaction for fixed-size SVG
+  // simplified: no popups. Keep hearts/spawn behavior for Surprise button.
   const svg = document.getElementById('svg');
-  const bubble = document.getElementById('bubble');
-  const bubbleText = document.getElementById('bubbleText');
-  const bubbleClose = document.getElementById('bubbleClose');
-  const bubbleSlide = document.getElementById('bubbleSlide');
   const recipient = "Evan";
   document.getElementById('recipient').textContent = recipient;
-  const singleLine = `${recipient} — will you be my Valentine?`;
 
-  // safe conversion helpers
-  function clientToSvg(clientX, clientY){
-    const pt = svg.createSVGPoint();
-    pt.x = clientX; pt.y = clientY;
-    const ctm = svg.getScreenCTM();
-    if(!ctm) return {x:clientX,y:clientY};
-    return pt.matrixTransform(ctm.inverse());
-  }
+  // helper: convert svg coords -> client coords
   function svgToClient(sx, sy){
     const pt = svg.createSVGPoint(); pt.x = sx; pt.y = sy;
     const ctm = svg.getScreenCTM();
+    if(!ctm) return {x:sx,y:sy};
     return pt.matrixTransform(ctm);
   }
 
-  // show bubble at svg point (sx,sy are SVG coordinates)
-  // this positions the bubble using an SVG transform attribute and then triggers the internal <animateTransform>
-  function showBubbleAtSvg(sx, sy, text){
-    bubbleText.textContent = text;
-
-    // offset to place bubble above rose; tweak to taste
-    const offsetY = 96;
-    // To create a slide-up, start slightly *below* final position and animate upward.
-    // We'll set the group's base transform to the final position (sx, sy - offsetY),
-    // and the <animateTransform> we defined in the group will add a small upward translate (from "0 10" to "0 0")
-    // to produce the slide-up effect.
-    const finalX = sx;
-    const finalY = sy - offsetY;
-
-    // Set the group's transform to final position (the animateTransform will be additive).
-    bubble.setAttribute('transform', `translate(${finalX}, ${finalY})`);
-
-    // reveal via class/opacity
-    bubble.classList.add('show');
-    bubble.classList.remove('hide');
-    bubble.setAttribute('opacity','1');
-
-    // restart animation: if it is mid-play, cancel and then begin
-    try {
-      // Some browsers require calling endElement before beginElement to restart
-      bubbleSlide.endElement && bubbleSlide.endElement();
-    } catch(e){/* ignore if not supported */}
-    // Kick the SVG animate element
-    bubbleSlide.beginElement();
-  }
-
-  function hideBubble(){
-    // fade out quickly
-    bubble.classList.remove('show');
-    bubble.classList.add('hide');
-    bubble.setAttribute('opacity','0');
-    // no transform change necessary — it will be repositioned next time it's shown
-  }
-
-  // spawn hearts from svg point
+  // spawn hearts from svg point (sx, sy)
   function spawnHearts(sx, sy, count=10){
     const client = svgToClient(sx, sy);
     for(let i=0;i<count;i++){
@@ -190,51 +140,41 @@
       el.textContent = ['❤','💗','💕'][Math.floor(Math.random()*3)];
       document.body.appendChild(el);
       const size = 12 + Math.random()*26; el.style.fontSize = size + 'px';
-      const left = client.x + (Math.random()*80 - 40); const top = client.y + (Math.random()*30 - 8);
+      const left = client.x + (Math.random()*80 - 40);
+      const top = client.y + (Math.random()*30 - 8);
       el.style.left = left + 'px'; el.style.top = top + 'px';
       const dx = (Math.random()*120 - 60); const dy = -(120 + Math.random()*80);
-      el.animate([{transform:'translate(0,0) scale(1)', opacity:1},{transform:`translate(${dx}px,${dy}px) scale(.85)`, opacity:0}], {duration:1400 + Math.random()*800, easing:'cubic-bezier(.2,.9,.3,1)'});
+      el.animate([
+        {transform:'translate(0,0) scale(1)', opacity:1},
+        {transform:`translate(${dx}px,${dy}px) scale(.85)`, opacity:0}
+      ], {duration:1400 + Math.random()*800, easing:'cubic-bezier(.2,.9,.3,1)'});
       setTimeout(()=> el.remove(), 1800 + Math.random()*900);
     }
   }
 
-  // attach to hit circles
-  svg.querySelectorAll('.hit').forEach(hit => {
-    hit.addEventListener('click', (ev) => {
-      ev.stopPropagation(); ev.preventDefault();
-      const group = hit.parentNode;
-      const rect = group.getBoundingClientRect();
-      const clientX = rect.left + rect.width/2;
-      const clientY = rect.top + rect.height/2;
-      const svgPt = clientToSvg(clientX, clientY);
-      showBubbleAtSvg(svgPt.x, svgPt.y, singleLine);
-      spawnHearts(svgPt.x, svgPt.y, 12);
-    }, {passive:false});
-  });
-
-  // Surprise button: center flower
+  // Surprise button: spawn from the center flower location
   document.getElementById('surprise').addEventListener('click', ()=>{
+    // find center flower's position (data-name="center")
     const centerG = svg.querySelector('[data-name="center"]');
-    const rect = centerG.getBoundingClientRect();
-    const svgPt = clientToSvg(rect.left + rect.width/2, rect.top + rect.height/2);
-    showBubbleAtSvg(svgPt.x, svgPt.y, singleLine);
-    spawnHearts(svgPt.x, svgPt.y, 12);
+    // compute its bounding box center in screen pixels
+    const bbox = centerG.getBBox();
+    // group transform is translate(sx,sy) — we can read it from the 'transform' attribute
+    const transformAttr = centerG.getAttribute('transform') || 'translate(350,170)';
+    // parse translate(x,y)
+    const match = transformAttr.match(/translate\(\s*([-\d.]+)[ ,]+([-\d.]+)\s*\)/);
+    let sx = 350, sy = 170;
+    if(match){
+      sx = parseFloat(match[1]);
+      sy = parseFloat(match[2]);
+    }
+    // use the group's translate coordinates as spawn origin
+    spawnHearts(sx, sy, 18);
   });
 
-  // close bubble (click inside SVG group)
-  bubbleClose.addEventListener('click', (ev)=>{ ev.stopPropagation(); hideBubble(); });
-
-  // clicking outside hides bubble — ensure clicks inside the SVG bubble do not close it
-  document.body.addEventListener('click', (ev)=>{
-    if (ev.target && ev.target.closest && (ev.target.closest('#bubble') || ev.target.closest('.svg-bubble'))) return;
-    hideBubble();
+  // accessibility: keyboard trigger for Surprise (space/enter when focused)
+  document.getElementById('surprise').addEventListener('keydown', (e)=>{
+    if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.target.click(); }
   });
-
-  // ESC closes
-  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') hideBubble(); });
-
-  // start hidden
-  hideBubble();
 </script>
 </body>
 </html>
