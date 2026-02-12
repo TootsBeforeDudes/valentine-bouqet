@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>For Evan — SVG bubble & roses</title>
+<title>For Evan — Roses with SVG bubble</title>
 <style>
-  :root{ --bg:#fff6f8; --accent:#d63384; --muted:#6b7280; --shadow: rgba(10,10,20,0.08); }
+  :root{--bg:#fff6f8;--accent:#d63384;--muted:#6b7280;--shadow: rgba(10,10,20,0.08)}
   html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);display:flex;align-items:center;justify-content:center}
   .card{width:min(980px,96vw);height:min(760px,88vh);border-radius:14px;background:linear-gradient(180deg,#fff,#fff6f8);box-shadow:0 22px 48px var(--shadow);padding:24px;display:flex;flex-direction:column;align-items:center;gap:12px}
   .canvasWrap{ width:100%; flex:1; display:flex; align-items:center; justify-content:center; }
@@ -14,39 +14,33 @@
   .hint{ color:var(--muted); margin:0 0 6px; text-align:center }
   button.btn{ margin-top:6px; padding:10px 14px; border-radius:10px; border:1px solid rgba(0,0,0,0.06); background:#fff; cursor:pointer }
 
-  /* SVG: make pointer handling explicit so clicks reach groups */
-  svg { width:95%; height:95%; }
-  svg * { transform-box: fill-box; transform-origin: center; pointer-events: visiblePainted; }
+  /* SVG layout */
+  svg { width:95%; height:95%; display:block; }
+  svg * { transform-box: fill-box; transform-origin: center; }
 
-  /* petals, stems */
-  .petal { filter: drop-shadow(0 6px 10px rgba(0,0,0,0.06)); transition: transform 380ms ease; }
+  .petal { filter: drop-shadow(0 6px 10px rgba(0,0,0,0.06)); transition: transform 320ms ease; }
   .flower:hover .petal { transform: scale(1.03); }
-  .flower:active .petal { transform: scale(.96) rotate(2deg); }
-
   .stem { stroke:#2b6b3a; stroke-width:5; stroke-linecap:round; fill:none; }
+  .flower { animation: flowerFloat 6s ease-in-out infinite; cursor:pointer; }
+  @keyframes flowerFloat { 0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)} }
 
-  /* flower float */
-  .flower { animation: flowerFloat 6.5s ease-in-out infinite; cursor:pointer; }
-  @keyframes flowerFloat { 0%{transform:translateY(0)} 50%{transform:translateY(-6px)} 100%{transform:translateY(0)} }
-
-  /* SVG bubble styles (animated via CSS class on group) */
-  .svg-bubble { transform-origin: center bottom; opacity:0; transition: transform .28s cubic-bezier(.2,.9,.3,1), opacity .28s ease; }
+  /* SVG bubble animation classes (for transform & opacity) */
+  .svg-bubble { transform-origin:center bottom; opacity:0; transition: transform .26s cubic-bezier(.2,.9,.3,1), opacity .26s ease; pointer-events:auto; }
   .svg-bubble.show { transform: translateY(-6px) scale(1); opacity:1; }
   .svg-bubble.hide { transform: translateY(6px) scale(.96); opacity:0; }
 
-  /* hearts (DOM elements) */
+  /* hearts (DOM transient elements) */
   .heart { position:fixed; pointer-events:none; font-size:18px; opacity:0.95; z-index:1100; }
 
-  @media (max-width:920px){
-    .card{padding:16px}
-  }
+  /* responsive */
+  @media (max-width:920px){ .card{padding:16px} .name{font-size:26px} }
 </style>
 </head>
 <body>
   <div class="card" role="main">
     <div class="canvasWrap">
-      <!-- BIG SVG: everything (flowers, vase, bubble) drawn inside so bubble can be anchored precisely -->
-      <svg id="svg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Rose bouquet">
+      <!-- everything in a single SVG coordinate system -->
+      <svg id="svg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" aria-label="Rose bouquet">
         <defs>
           <radialGradient id="petGrad1" cx="30%" cy="30%"><stop offset="0%" stop-color="#ffdfe6"/><stop offset="60%" stop-color="#ff7f9a"/><stop offset="100%" stop-color="#d64b6d"/></radialGradient>
           <radialGradient id="petGrad2" cx="30%" cy="30%"><stop offset="0%" stop-color="#fff1e6"/><stop offset="60%" stop-color="#ff9aa6"/><stop offset="100%" stop-color="#d45b78"/></radialGradient>
@@ -54,14 +48,18 @@
           <linearGradient id="vaseGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.98"/><stop offset="100%" stop-color="#ffeef6"/></linearGradient>
         </defs>
 
-        <!-- vase baseline -->
+        <!-- vase -->
         <g id="vase" transform="translate(500,470)">
           <ellipse cx="0" cy="36" rx="220" ry="30" fill="rgba(0,0,0,0.06)"></ellipse>
           <path d="M-160 12 C-120 160 120 160 160 12 L140 240 C70 280 -70 280 -140 240 Z" fill="url(#vaseGrad)"></path>
         </g>
 
-        <!-- Flowers (three) -->
+        <!-- FLOWER: group includes an invisible 'hit' circle to reliably capture clicks even when scaled -->
+        <!-- LEFT -->
         <g class="flower" transform="translate(330,300)" data-name="left">
+          <!-- invisible hit area (large so taps/clicks are reliable) -->
+          <circle class="hit" cx="0" cy="0" r="90" fill="transparent" style="pointer-events:all"></circle>
+
           <path class="stem" d="M0 6 C -10 48 -12 120 160 226"></path>
           <ellipse class="petal" rx="52" ry="30" cx="0" cy="-36" fill="url(#petGrad1)" transform="rotate(-54)"></ellipse>
           <ellipse class="petal" rx="52" ry="30" cx="0" cy="-36" fill="url(#petGrad2)" transform="rotate(18)"></ellipse>
@@ -71,7 +69,10 @@
           <circle cx="0" cy="-10" r="12" fill="url(#centerG)"></circle>
         </g>
 
+        <!-- CENTER -->
         <g class="flower" transform="translate(500,260)" data-name="center">
+          <circle class="hit" cx="0" cy="0" r="110" fill="transparent" style="pointer-events:all"></circle>
+
           <path class="stem" d="M0 10 C -8 70 -16 150 0 240"></path>
           <ellipse class="petal" rx="66" ry="38" cx="0" cy="-48" fill="url(#petGrad2)" transform="rotate(-54)"></ellipse>
           <ellipse class="petal" rx="66" ry="38" cx="0" cy="-48" fill="url(#petGrad1)" transform="rotate(18)"></ellipse>
@@ -81,7 +82,10 @@
           <circle cx="0" cy="-12" r="16" fill="url(#centerG)"></circle>
         </g>
 
+        <!-- RIGHT -->
         <g class="flower" transform="translate(670,300)" data-name="right">
+          <circle class="hit" cx="0" cy="0" r="90" fill="transparent" style="pointer-events:all"></circle>
+
           <path class="stem" d="M0 6 C -6 64 -36 120 -120 226"></path>
           <ellipse class="petal" rx="52" ry="30" cx="0" cy="-36" fill="url(#petGrad1)" transform="rotate(-54)"></ellipse>
           <ellipse class="petal" rx="52" ry="30" cx="0" cy="-36" fill="url(#petGrad2)" transform="rotate(18)"></ellipse>
@@ -91,21 +95,13 @@
           <circle cx="0" cy="-10" r="12" fill="url(#centerG)"></circle>
         </g>
 
-        <!-- SVG speech-bubble group (hidden until shown) -->
+        <!-- SVG speech bubble (single-line text) - hidden by default -->
         <g id="svgBubble" class="svg-bubble hide" transform="translate(500,150)" opacity="0">
-          <!-- rounded rect bubble -->
-          <rect x="-160" y="-90" rx="12" ry="12" width="320" height="84" fill="#fff" stroke="rgba(0,0,0,0.04)" />
-          <!-- tail triangle (simple) -->
-          <path d="M-24  -6 L0 18 L24 -6 Z" fill="#fff" stroke="rgba(0,0,0,0.03)"></path>
-          <!-- text (wrapped approx by manual tspans) -->
-          <text id="bubbleText" x="0" y="-46" font-family="Inter, system-ui, Arial" font-size="14" fill="#35272f" text-anchor="middle">
-            <tspan id="line1" x="0" dy="0">Hello</tspan>
-            <tspan id="line2" x="0" dy="18"></tspan>
-            <tspan id="line3" x="0" dy="18"></tspan>
-          </text>
-          <!-- close "button" (SVG rect clickable) -->
-          <g id="bubbleClose" transform="translate(0,20)" style="cursor:pointer">
-            <rect x="-42" y="0" rx="8" ry="8" width="84" height="28" fill="#d63384" />
+          <rect x="-180" y="-64" rx="12" ry="12" width="360" height="48" fill="#fff" stroke="rgba(0,0,0,0.04)"></rect>
+          <path d="M-18 -8 L0 18 L18 -8 Z" fill="#fff" stroke="rgba(0,0,0,0.03)"></path>
+          <text id="svgBubbleText" x="0" y="-34" font-family="Inter, system-ui, Arial" font-size="16" fill="#35272f" text-anchor="middle">Evan — will you be my Valentine?</text>
+          <g id="svgBubbleClose" transform="translate(0,6)" style="cursor:pointer">
+            <rect x="-36" y="0" rx="8" ry="8" width="72" height="28" fill="#d63384"></rect>
             <text x="0" y="19" font-family="Inter, system-ui, Arial" font-size="13" fill="#fff" text-anchor="middle">Close</text>
           </g>
         </g>
@@ -120,61 +116,47 @@
   </div>
 
 <script>
-  // CONFIG
+  // small, robust interaction layer
   const recipientName = "Evan";
-  const surpriseLines = [
-    "Roses are lovely, violets are true —",
-    "every moment sparkles more with you.",
-    "Will you be my Valentine?"
-  ];
   document.getElementById('recipient').textContent = recipientName;
 
-  // utils: map client (mouse) coordinates to SVG coords
   const svg = document.getElementById('svg');
+  const svgBubble = document.getElementById('svgBubble');
+  const svgBubbleText = document.getElementById('svgBubbleText');
+  const bubbleClose = document.getElementById('svgBubbleClose');
+
+  // helper: convert client coords to svg coords
   function clientToSvgPoint(clientX, clientY){
     const pt = svg.createSVGPoint();
     pt.x = clientX; pt.y = clientY;
     const ctm = svg.getScreenCTM();
     if(!ctm) return {x:clientX,y:clientY};
     const inv = ctm.inverse();
-    const loc = pt.matrixTransform(inv);
-    return { x: loc.x, y: loc.y };
+    return pt.matrixTransform(inv);
   }
 
-  // show bubble at svg coords (sx, sy) - positions bubble group so tail points to the flower
-  const svgBubble = document.getElementById('svgBubble');
-  const bubbleTextEls = {
-    line1: document.getElementById('line1'),
-    line2: document.getElementById('line2'),
-    line3: document.getElementById('line3')
-  };
-  function setBubbleText(lines){
-    bubbleTextEls.line1.textContent = lines[0] || "";
-    bubbleTextEls.line2.textContent = lines[1] || "";
-    bubbleTextEls.line3.textContent = lines[2] || "";
-  }
-
-  function showSvgBubbleAtSvgCoords(sx, sy, lines){
-    // position bubble above the anchor point by offsetting transform
-    const bubbleX = sx; // center above flower
-    const bubbleY = sy - 90; // raise it above the flower
+  // show bubble at svg coords (sx, sy)
+  function showSvgBubbleAt(sx, sy, text){
+    // set text
+    svgBubbleText.textContent = text;
+    // place bubble a little above the point
+    const bubbleX = sx;
+    const bubbleY = sy - 90;
     svgBubble.setAttribute('transform', `translate(${bubbleX}, ${bubbleY})`);
-    setBubbleText(lines);
-    // make visible
-    svgBubble.classList.remove('hide');
+    // animate show
     svgBubble.classList.add('show');
-    svgBubble.setAttribute('opacity', '1');
+    svgBubble.classList.remove('hide');
+    svgBubble.setAttribute('opacity','1');
   }
 
   function hideSvgBubble(){
     svgBubble.classList.remove('show');
     svgBubble.classList.add('hide');
-    svgBubble.setAttribute('opacity', '0');
+    svgBubble.setAttribute('opacity','0');
   }
 
-  // hearts (DOM) spawn from an SVG point: convert to client pixels
-  function spawnHeartsFromSvg(sx, sy, count=10){
-    // convert svg point back to client coords
+  // spawn hearts from an svg point
+  function spawnHeartsFromSvgPoint(sx, sy, count=10){
     const pt = svg.createSVGPoint(); pt.x = sx; pt.y = sy;
     const ctm = svg.getScreenCTM();
     const client = pt.matrixTransform(ctm);
@@ -185,81 +167,66 @@
       document.body.appendChild(h);
       const size = 12 + Math.random()*26;
       h.style.fontSize = size + 'px';
-      // jitter start near the client point
       const left = client.x + (Math.random()*80 - 40);
       const top = client.y + (Math.random()*30 - 10);
       h.style.left = left + 'px';
       h.style.top = top + 'px';
-      // animate (Web Animations)
       const dx = (Math.random()*160 - 80);
-      const dy = - (120 + Math.random()*100);
+      const dy = -(120 + Math.random()*100);
       h.animate([
         { transform: 'translate(0,0) scale(1)', opacity: 1 },
         { transform: `translate(${dx}px, ${dy}px) scale(.85)`, opacity: 0 }
-      ], {
-        duration: 1400 + Math.random()*800,
-        easing: 'cubic-bezier(.2,.9,.3,1)'
-      });
+      ], { duration: 1400 + Math.random()*800, easing: 'cubic-bezier(.2,.9,.3,1)' });
       setTimeout(()=> h.remove(), 1800 + Math.random()*900);
     }
   }
 
-  // set bubble text to surpriseLines by default
-  function bubbleLinesFor(name){
-    // include name on second line optionally
-    return [
-      surpriseLines[0],
-      surpriseLines[1],
-      `${surpriseLines[2]}`
-    ];
-  }
+  // the single-line message (requested)
+  const singleLine = `${recipientName} — will you be my Valentine?`;
 
-  // click handlers: attach to each .flower group for reliable clicks
-  svg.querySelectorAll('.flower').forEach(g => {
-    // use capture true to ensure we catch clicks even if some child element is picky
-    g.addEventListener('click', (ev) => {
+  // attach click handler to the invisible hit circles first (more reliable)
+  svg.querySelectorAll('.hit').forEach(hit => {
+    hit.addEventListener('click', (ev) => {
       ev.stopPropagation();
       ev.preventDefault();
-      // compute svg coordinates of the group's center using bbox
-      const bbox = g.getBBox();
-      // group transform is applied; compute group's screen center via getBoundingClientRect for reliability
-      const rect = g.getBoundingClientRect();
+      // find parent flower group and compute center bbox in client coords
+      const flowerGroup = hit.parentNode;
+      const rect = flowerGroup.getBoundingClientRect();
       const clientX = rect.left + rect.width/2;
       const clientY = rect.top + rect.height/2;
       const svgPt = clientToSvgPoint(clientX, clientY);
-      showSvgBubbleAtSvgCoords(svgPt.x, svgPt.y, bubbleLinesFor(recipientName));
-      spawnHeartsFromSvg(svgPt.x, svgPt.y, 10);
-    }, { capture: true });
+      showSvgBubbleAt(svgPt.x, svgPt.y, singleLine);
+      spawnHeartsFromSvgPoint(svgPt.x, svgPt.y, 12);
+    }, {passive:false});
   });
 
-  // Surprise Now button: center bubble near center flower
-  document.getElementById('surpriseBtn').addEventListener('click', ()=>{
-    const centerFlower = svg.querySelector('[data-name="center"]');
-    const rect = centerFlower.getBoundingClientRect();
+  // Surprise Now button: show at center flower
+  document.getElementById('surpriseBtn').addEventListener('click', () => {
+    const center = svg.querySelector('[data-name="center"]');
+    const rect = center.getBoundingClientRect();
     const clientX = rect.left + rect.width/2;
     const clientY = rect.top + rect.height/2;
     const svgPt = clientToSvgPoint(clientX, clientY);
-    showSvgBubbleAtSvgCoords(svgPt.x, svgPt.y, bubbleLinesFor(recipientName));
-    spawnHeartsFromSvg(svgPt.x, svgPt.y, 12);
+    showSvgBubbleAt(svgPt.x, svgPt.y, singleLine);
+    spawnHeartsFromSvgPoint(svgPt.x, svgPt.y, 14);
   });
 
-  // bubble close (SVG element)
-  document.getElementById('bubbleClose').addEventListener('click', (ev) => {
+  // bubble close
+  bubbleClose.addEventListener('click', (ev)=>{
     ev.stopPropagation();
     hideSvgBubble();
   });
 
-  // clicking outside removes bubble
-  document.body.addEventListener('click', (ev) => {
-    // if we clicked inside the svg bubble group, ignore (bubble close handles)
+  // clicking outside hides bubble
+  document.body.addEventListener('click', (ev)=>{
     if(ev.target.closest && ev.target.closest('#svgBubble')) return;
     hideSvgBubble();
   });
 
-  // keyboard escape closes
-  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') hideSvgBubble(); });
+  // ESC closes
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') hideSvgBubble(); });
 
-  // defensive: make bubble hidden at load
+  // ensure bubble hidden initially
   hideSvgBubble();
 </script>
 </body>
