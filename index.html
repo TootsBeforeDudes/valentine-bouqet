@@ -3,150 +3,119 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>For Evan — Roses (Aligned)</title>
+<title>For Evan — Simple Roses</title>
 <style>
-  :root{ --bg:#fff6f8; --accent:#d63384; --shadow: rgba(10,10,20,0.08); }
-  html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);display:flex;align-items:center;justify-content:center}
-  .card{width:min(920px,94vw);height:min(640px,86vh);border-radius:14px;background:linear-gradient(180deg,#fff,#fff6f8);box-shadow:0 22px 48px var(--shadow);display:flex;gap:24px;padding:28px;align-items:center}
-  .left{flex:1;display:flex;align-items:center;justify-content:center}
-  .right{width:300px;padding:6px 12px}
-  h1{margin:0;font-size:20px;color:#3a2b33}
-  .name{color:var(--accent);font-weight:700;font-size:28px;margin:8px 0}
-  .hint{color:#6b6b73;font-size:13px}
-  .btn{display:inline-block;padding:8px 12px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:#fff;cursor:pointer;margin-top:12px}
-  svg *{ transform-box: fill-box; transform-origin: center; }
-  .petal{ animation: bloom .9s cubic-bezier(.2,.9,.3,1) both; }
-  .stem{ animation: sway 5.5s ease-in-out infinite; transform-origin: bottom center; stroke-linecap:round; }
-  .roseGroup{ animation: float 6s ease-in-out infinite; }
-  @keyframes bloom{0%{transform:scale(.12) translateY(18px);opacity:0}70%{transform:scale(1.06) translateY(-6px);opacity:1}100%{transform:scale(1) translateY(0)}}
-  @keyframes sway{0%{transform:rotate(0deg)}25%{transform:rotate(2deg)}50%{transform:rotate(0deg)}75%{transform:rotate(-2deg)}100%{transform:rotate(0deg)}}
-  @keyframes float{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
-  .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity .2s;background:linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.18));z-index:50}
-  .overlay.show{pointer-events:all;opacity:1}
-  .popup{background:white;padding:22px;border-radius:12px;box-shadow:0 18px 40px rgba(10,10,20,0.18);max-width:86vw;text-align:center}
-  .close{margin-top:12px;background:var(--accent);color:white;padding:8px 12px;border:none;border-radius:8px;cursor:pointer}
-  @media (max-width:900px){ .card{flex-direction:column;height:auto;padding:18px} .right{width:100%;text-align:center} }
+  :root{--bg:#fff6f8;--accent:#d63384;--muted:#6b7280}
+  html,body{height:100%;margin:0;font-family:Inter,system-ui,Helvetica,Arial,sans-serif;background:var(--bg);display:flex;align-items:center;justify-content:center}
+  .page{width:min(980px,96vw);height:min(720px,88vh);border-radius:14px;background:linear-gradient(180deg,#fff,#fff6f8);box-shadow:0 18px 40px rgba(10,10,20,0.08);padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .centerArea{width:100%;flex:1;display:flex;align-items:center;justify-content:center}
+  h1{margin:18px 0 6px 0;font-size:20px;color:#3a2b33}
+  .name{color:var(--accent);font-size:30px;font-weight:700;margin:0}
+  p.hint{color:var(--muted);margin:10px 0 0 0}
+  button.btn{margin-top:18px;padding:10px 14px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);background:#fff;cursor:pointer}
+  /* ensure SVG transforms behave consistently */
+  svg *{ transform-box: fill-box; transform-origin:center; }
+  .petal{animation:petalIn .9s cubic-bezier(.2,.9,.3,1) both}
+  .stem{stroke:#2b6b3a;stroke-width:5;stroke-linecap:round;fill:none}
+  @keyframes petalIn{0%{transform:scale(.12) translateY(16px);opacity:0}70%{transform:scale(1.06) translateY(-6px);opacity:1}100%{transform:scale(1) translateY(0)}}
+  @media (max-width:760px){ .name{font-size:24px} .page{padding:14px} }
 </style>
 </head>
 <body>
-<div class="card">
-  <div class="left">
-    <!-- SVG bouquet: each rose group contains its stem (relative) + petals (relative) -->
-    <svg id="roses" viewBox="0 0 900 640" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-label="Roses in a vase">
-      <defs>
-        <radialGradient id="rg1" cx="30%" cy="30%"><stop offset="0%" stop-color="#ffd6dd"/><stop offset="60%" stop-color="#ff8aa3"/><stop offset="100%" stop-color="#d64b6d"/></radialGradient>
-        <radialGradient id="rg2" cx="30%" cy="30%"><stop offset="0%" stop-color="#ffe9d6"/><stop offset="60%" stop-color="#ff8aa3"/><stop offset="100%" stop-color="#e06278"/></radialGradient>
-        <radialGradient id="centerG" cx="40%" cy="40%"><stop offset="0%" stop-color="#fff7d9"/><stop offset="100%" stop-color="#ffd166"/></radialGradient>
-        <linearGradient id="vaseGrad" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.96"/><stop offset="100%" stop-color="#ffeef6"/></linearGradient>
-      </defs>
+  <div class="page">
+    <div class="centerArea">
+      <!-- Single, tightly-scoped SVG coordinate system. Nothing references outside this box. -->
+      <svg id="svg" viewBox="0 0 1000 700" preserveAspectRatio="xMidYMid meet" width="95%" height="95%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A bouquet for Evan">
+        <defs>
+          <radialGradient id="petalA" cx="30%" cy="30%">
+            <stop offset="0%" stop-color="#ffd6dd"/><stop offset="60%" stop-color="#ff7a96"/><stop offset="100%" stop-color="#d64b6d"/>
+          </radialGradient>
+          <radialGradient id="petalB" cx="30%" cy="30%">
+            <stop offset="0%" stop-color="#ffe9d6"/><stop offset="60%" stop-color="#ff8aa3"/><stop offset="100%" stop-color="#e06278"/>
+          </radialGradient>
+          <radialGradient id="centerG" cx="40%" cy="40%">
+            <stop offset="0%" stop-color="#fff9d6"/><stop offset="100%" stop-color="#ffd166"/>
+          </radialGradient>
+          <linearGradient id="vaseG" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.96"/>
+            <stop offset="100%" stop-color="#ffeef6"/>
+          </linearGradient>
+        </defs>
 
-      <!-- vase (fixed) -->
-      <g id="vase" transform="translate(450,500)">
-        <ellipse cx="0" cy="36" rx="220" ry="34" fill="rgba(0,0,0,0.06)"/>
-        <path d="M-160 12 C-120 170 120 170 160 12 L140 260 C70 300 -70 300 -140 260 Z" fill="url(#vaseGrad)"/>
-      </g>
+        <!-- vase centered at (500,480) -->
+        <g id="vase" transform="translate(500,480)">
+          <ellipse cx="0" cy="36" rx="220" ry="30" fill="rgba(0,0,0,0.06)"/>
+          <path d="M-160 12 C-120 160 120 160 160 12 L140 240 C70 280 -70 280 -140 240 Z" fill="url(#vaseG)"/>
+        </g>
 
-      <!-- LEFT ROSE group:
-           position at (300,360). The stem path starts at 0,0 and goes down into the vase.
-           This guarantees petals and stem are aligned.
-      -->
-      <g class="roseGroup" transform="translate(300,360)" data-name="rose-left" style="cursor:pointer">
-        <!-- stem drawn relative to group origin (0,0) -->
-        <path class="stem" d="M0 0 C -10 60 10 100 110 160" stroke="#2b6b3a" stroke-width="5" fill="none"/>
-        <!-- petals (drawn centered on group origin) -->
-        <path class="petal" d="M0 -30 C34 -66 60 -34 48 -6 C36 22 -6 32 -24 18 C-42 4 -12 -10 0 -30 Z" fill="url(#rg1)"/>
-        <path class="petal" d="M0 -30 C-24 -58 -56 -36 -46 -6 C-36 22 -8 32 10 22 C28 12 16 -6 0 -30 Z" fill="url(#rg2)" transform="rotate(22)"/>
-        <ellipse class="center" rx="12" ry="10" cx="0" cy="-8" fill="url(#centerG)"/>
-      </g>
+        <!-- Flower groups: each group uses coordinates within the SVG.
+             Stems are drawn relative to the flower anchor so they always connect to the bloom.
+        -->
 
-      <!-- CENTER ROSE group at (460,320). Stem ends deeper into vase -->
-      <g class="roseGroup" transform="translate(460,320)" data-name="rose-center" style="cursor:pointer">
-        <path class="stem" d="M0 0 C -6 60 -14 120 0 200" stroke="#2b6b3a" stroke-width="5" fill="none"/>
-        <path class="petal" d="M0 -36 C48 -82 96 -44 72 -6 C48 32 6 46 -18 28 C-42 10 -6 -6 0 -36 Z" fill="url(#rg2)"/>
-        <path class="petal" d="M0 -36 C-28 -66 -82 -44 -66 -6 C-50 32 -12 46 14 30 C40 14 10 -4 0 -36 Z" fill="url(#rg1)" transform="rotate(18)"/>
-        <ellipse class="center" rx="16" ry="14" fill="url(#centerG)"/>
-      </g>
+        <!-- LEFT ROSE at (330,300) -->
+        <g transform="translate(330,300)" class="flower" style="cursor:pointer">
+          <!-- stem: relative path ending at vase area (approx 500,510) -->
+          <path class="stem" d="M0 12 C -8 90 10 150 170 230" />
+          <!-- petals drawn around group origin -->
+          <path class="petal" d="M0 -26 C34 -62 60 -30 48 -4 C36 22 -6 30 -24 16 C-42 2 -12 -10 0 -26 Z" fill="url(#petalA)"/>
+          <path class="petal" d="M0 -26 C-24 -56 -56 -34 -46 -6 C-36 20 -8 30 10 20 C28 10 16 -6 0 -26 Z" fill="url(#petalB)" transform="rotate(20)"/>
+          <ellipse cx="0" cy="-8" rx="12" ry="10" fill="url(#centerG)"/>
+        </g>
 
-      <!-- RIGHT ROSE group at (620,360). Stem goes into vase -->
-      <g class="roseGroup" transform="translate(620,360)" data-name="rose-right" style="cursor:pointer">
-        <path class="stem" d="M0 0 C -20 60 -80 100 -120 160" stroke="#2b6b3a" stroke-width="5" fill="none"/>
-        <path class="petal" d="M0 -28 C40 -64 76 -36 58 -8 C40 20 4 34 -18 20 C-40 6 -8 -6 0 -28 Z" fill="url(#rg1)"/>
-        <path class="petal" d="M0 -28 C-26 -56 -64 -36 -50 -8 C-36 20 -8 34 10 22 C28 10 12 -6 0 -28 Z" fill="url(#rg2)" transform="rotate(-18)"/>
-        <ellipse class="center" rx="12" ry="10" fill="url(#centerG)"/>
-      </g>
+        <!-- CENTER ROSE at (500,260) -->
+        <g transform="translate(500,260)" class="flower" style="cursor:pointer">
+          <path class="stem" d="M0 18 C -6 100 -16 170 0 240" />
+          <path class="petal" d="M0 -36 C48 -82 96 -44 72 -6 C48 32 6 46 -18 28 C-42 10 -6 -6 0 -36 Z" fill="url(#petalB)"/>
+          <path class="petal" d="M0 -36 C-28 -66 -82 -44 -66 -6 C-50 32 -12 46 14 30 C40 14 10 -4 0 -36 Z" fill="url(#petalA)" transform="rotate(16)"/>
+          <ellipse cx="0" cy="-10" rx="16" ry="14" fill="url(#centerG)"/>
+        </g>
 
-      <!-- small accent bloom at (520,260) -->
-      <g class="roseGroup" transform="translate(520,260)">
-        <path class="stem" d="M0 0 C 0 40 -18 100 -50 260" stroke="#2b6b3a" stroke-width="4" fill="none"/>
-        <ellipse class="petal" rx="26" ry="16" cx="0" cy="-22" fill="url(#rg2)"/>
-        <ellipse class="center" rx="8" ry="6" cx="0" cy="-6" fill="url(#centerG)"/>
-      </g>
+        <!-- RIGHT ROSE at (670,300) -->
+        <g transform="translate(670,300)" class="flower" style="cursor:pointer">
+          <path class="stem" d="M0 12 C -6 90 -28 150 -110 230" />
+          <path class="petal" d="M0 -28 C40 -64 76 -36 58 -8 C40 20 4 34 -18 20 C-40 6 -8 -6 0 -28 Z" fill="url(#petalA)"/>
+          <path class="petal" d="M0 -28 C-26 -56 -64 -36 -50 -8 C-36 20 -8 34 10 22 C28 10 12 -6 0 -28 Z" fill="url(#petalB)" transform="rotate(-16)"/>
+          <ellipse cx="0" cy="-8" rx="12" ry="10" fill="url(#centerG)"/>
+        </g>
 
-      <text x="450" y="600" text-anchor="middle" fill="#6b7280" font-size="18">A small bouquet, just for you</text>
-    </svg>
-  </div>
+        <!-- small accent bloom -->
+        <g transform="translate(540,200)" class="flower" style="cursor:pointer">
+          <path class="stem" d="M0 12 C 0 60 -16 120 -50 220" />
+          <ellipse class="petal" cx="0" cy="-22" rx="22" ry="14" fill="url(#petalB)"/>
+          <ellipse cx="0" cy="-6" rx="8" ry="6" fill="url(#centerG)"/>
+        </g>
 
-  <div class="right">
+        <!-- label under vase -->
+        <text x="500" y="590" text-anchor="middle" fill="#6b7280" font-size="16">A small bouquet, just for you</text>
+      </svg>
+    </div>
+
     <h1>For</h1>
-    <div class="name" id="recipient">Evan</div>
-    <div class="hint">Click any rose for a surprise message and a little shower of hearts.</div>
+    <div class="name">Evan</div>
+    <p class="hint">Click any rose for a surprise message and a little shower of hearts.</p>
+    <button class="btn" id="surprise">Surprise Now</button>
 
-    <button class="btn" id="reveal">Surprise Now</button>
   </div>
-</div>
-
-<!-- overlay -->
-<div class="overlay" id="overlay" aria-hidden="true">
-  <div class="popup" role="dialog" aria-modal="true">
-    <h2 id="title">For Evan — A little note</h2>
-    <p id="message">Roses are lovely, violets are true — every moment sparkles more with you. Will you be my Valentine?</p>
-    <button class="close" id="close">Close</button>
-  </div>
-</div>
 
 <script>
-  const overlay = document.getElementById('overlay');
-  const closeBtn = document.getElementById('close');
-  const revealBtn = document.getElementById('reveal');
-  const svg = document.getElementById('roses');
-  const recipient = "Evan";
-  document.getElementById('recipient').textContent = recipient;
-
-  function spawnHearts(x,y,count=10){
-    for(let i=0;i<count;i++){
-      const el=document.createElement('div');
-      el.textContent=['❤','💗','💕'][Math.floor(Math.random()*3)];
-      el.style.position='fixed';
-      el.style.left = (x + (Math.random()*120 - 60)) + 'px';
-      el.style.top = (y + (Math.random()*80 - 40)) + 'px';
-      el.style.fontSize = (12 + Math.random()*28) + 'px';
-      el.style.pointerEvents = 'none';
-      el.style.opacity='0.95';
-      document.body.appendChild(el);
-      setTimeout(()=>{ el.style.transition='transform 1.8s ease, opacity 1.8s ease'; el.style.transform='translateY(-140px) scale(.9)'; el.style.opacity='0'; }, 40+Math.random()*160);
-      setTimeout(()=> el.remove(), 2200+Math.random()*800);
+  // small interactive surprise (keeps behavior but simpler)
+  const btn = document.getElementById('surprise');
+  btn.addEventListener('click', ()=>{
+    alert("Roses are lovely, violets are true — every moment sparkles more with you. Will you be my Valentine?");
+    // quick hearts: center of screen
+    for(let i=0;i<12;i++){
+      const d=document.createElement('div');
+      d.textContent = ['❤','💗','💕'][Math.floor(Math.random()*3)];
+      d.style.position='fixed';
+      d.style.left = (50 + (Math.random()*30-15)) + '%';
+      d.style.top = (40 + (Math.random()*30-15)) + '%';
+      d.style.fontSize = (14 + Math.random()*26) + 'px';
+      d.style.pointerEvents='none';
+      document.body.appendChild(d);
+      setTimeout(()=>{ d.style.transition='transform 1.6s ease, opacity 1.6s ease'; d.style.transform='translateY(-140px) scale(.9)'; d.style.opacity='0'; }, 60 + Math.random()*200);
+      setTimeout(()=> d.remove(), 1800 + Math.random()*700);
     }
-  }
-
-  function showSurpriseAt(cx,cy){
-    overlay.classList.add('show'); overlay.setAttribute('aria-hidden','false');
-    spawnHearts(cx,cy,12);
-  }
-
-  document.querySelectorAll('.roseGroup').forEach(r => {
-    r.addEventListener('click', (ev) => {
-      ev.stopPropagation();
-      showSurpriseAt(ev.clientX, ev.clientY);
-    });
   });
-
-  revealBtn.addEventListener('click', ()=> { showSurpriseAt(window.innerWidth/2, window.innerHeight/2); });
-  closeBtn.addEventListener('click', ()=> { overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeBtn.click(); });
-  svg.addEventListener('click', ev=> ev.stopPropagation());
-  document.body.addEventListener('click', ()=> { overlay.classList.remove('show'); overlay.setAttribute('aria-hidden','true'); });
-
-  console.log('Aligned stems & petals for', recipient);
 </script>
 </body>
 </html>
